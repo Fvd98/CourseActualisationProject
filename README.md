@@ -1,4 +1,4 @@
-# CourseActualisationProject
+# SchoolProgramUpdateProject
 
 This was the project my classmate and I had to complete for our final course.
 

@@ -1,0 +1,51 @@
+﻿@model CheckListViewModel<OutilsActualisation.AppData.Cours,OutilsActualisation.AppData.ChoixCours>
+@{ 
+    string Checked = "checked";
+}
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Selectionnez les cours pour le choix de cours <strong>@Model.Parent.Nom</strong></h4>
+</div>
+
+<div class="modal-body">
+    @if (Model.Items.Count() != 0)
+    {
+    <table class="ombre">
+        <thead >
+            <tr>
+                <th >
+                    Cours
+                </th>
+                <th style="text-align: center!important;">
+                    Sélectionné
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items.OrderBy(I => I.Item.Titre))
+            {
+                <tr>
+                    <td style="text-align:left!important;">
+                        @Html.DisplayFor(modelItem => item.Item.Titre)
+                        
+                    </td>
+                    <td style="text-align: center!important;">
+                        <a style="height: 20px;width: 20px;display: inline-block;" data-ajax-url="/Admin/FormationGenerale_ChoixCours_Cours?idCours=@item.Item.Id&idChoixCours=@Model.Parent.Id&Ajouter=@(!item.Checked)" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Admin/FormationGenerale_ChoixCours_Cours?id=@Model.Parent.Id', '#ModalContainer', false);AjaxFill('/Admin/FormationGenerale_ChoixCours', '#menu', false);" data-ajax-failure="Alert('error', xhr.responseText)">
+                            <input onclick="this.disabled=true;this.style.cursor = 'progress'" style="height:20px; width:20px; margin:0;" type="checkbox" @if (item.Checked) { @Checked } />
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+    else
+    {
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun cours pour cette formation générale...</p>
+    }
+</div>
+
+
+

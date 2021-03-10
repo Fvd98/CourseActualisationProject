@@ -1,0 +1,52 @@
+﻿@model OutilsActualisation.AppData.CompetenceAnalyse
+@{
+    List<OutilsActualisation.AppData.CompetenceAnalyseAttitudeMethode> attitudes = Model.CompetenceAnalyseAttitudeMethode.Where(M => M.AttitudeMethodeNavigation.Am == "A").ToList();
+    List<OutilsActualisation.AppData.CompetenceAnalyseAttitudeMethode> methodes = Model.CompetenceAnalyseAttitudeMethode.Where(M => M.AttitudeMethodeNavigation.Am == "M").ToList();
+}
+
+<h3 style="margin-bottom:0">Attitudes<span style="float:right;" class="btn btn-primary" onclick="AjaxFill('/Competence/Analyse_CompetenceAttitudeMethode_Update?id=@Model.Id&type=A', '#ModalContainer', false);">Modifier les attitudes</span></h3>
+@if (attitudes.Count() != 0)
+{
+    <br />
+    <table class="ombre" style="border: 1px solid lightgrey!important;">
+        @foreach (var Attitude in attitudes)
+        {
+            <tr>
+                <td>
+                    <span>@Attitude.AttitudeMethodeNavigation.Categorie - @Attitude.AttitudeMethodeNavigation.Enonce</span>
+                    <a title="Retirer l'attitude" data-ajax-url="/Competence/Analyse_CompetenceAttitudeMethode_Update?idAM=@Attitude.AttitudeMethode&idCA=@Attitude.CompetenceAnalyse&ajouter=false" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/Analyse_CompetenceAttitudeMethode?id=@Model.Id', '#menu_@Model.Id', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; margin-bottom:2px;" class="btn btn-danger glyphicon glyphicon-remove"></a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <br />
+    <p style="font-weight:bold; font-size:17px; text-align:center;">Aucune attitude pour cette compétence...</p>
+    <br />
+}
+<br /><br />
+
+<h3 style="margin-bottom:0">Méthodes<span style="float:right; " class="btn btn-primary" onclick="AjaxFill('/Competence/Analyse_CompetenceAttitudeMethode_Update?id=@Model.Id&type=M', '#ModalContainer', false);">Modifier les méthodes</span></h3>
+@if (methodes.Count() != 0)
+{
+    <br />
+    <table class="ombre" style="border: 1px solid lightgrey!important;">
+        @foreach (var Methode in methodes)
+        {
+            <tr>
+                <td>
+                    <span>@Methode.AttitudeMethodeNavigation.Categorie - @Methode.AttitudeMethodeNavigation.Enonce</span>
+                    <a title="Retirer la méthode" data-ajax-url="/Competence/Analyse_CompetenceAttitudeMethode_Update?idAM=@Methode.AttitudeMethode&idCA=@Methode.CompetenceAnalyse&ajouter=false" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/Analyse_CompetenceAttitudeMethode?id=@Model.Id', '#menu_@Model.Id', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; margin-bottom:2px;" class="btn btn-danger glyphicon glyphicon-remove"></a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <br />
+    <p style="font-weight:bold; font-size:17px; text-align:center;">Aucune méthode pour cette compétence...</p>
+    <br />
+}

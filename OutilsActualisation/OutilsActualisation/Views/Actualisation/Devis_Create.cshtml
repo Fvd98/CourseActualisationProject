@@ -1,0 +1,23 @@
+﻿@model OutilsActualisation.Models.DevisViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Téléverser @ViewBag.Name</h4>
+</div>
+<div class="modal-body">
+    <form enctype="multipart/form-data" style="margin-bottom:45px;" asp-controller="Actualisation" asp-action="Devis_Create" onsubmit="UpFileForm(event.target, function (data, status) { Alert('success', 'Le devis a bien été ajouté.'); DevisCreated('@ViewBag.ID',data); CloseModal();}, function (data, status, error) { Alert('error', 'Échec de l\'ajout du devis.'); }); event.preventDefault();">
+        <div class="form-group">
+            <label asp-for="Devis.CodeProgramme" class="control-label"></label>
+            <input asp-for="Devis.CodeProgramme" class="form-control" style="width:100%" />
+            <span asp-validation-for="Devis.CodeProgramme" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="DevisFile" class="control-label"></label>
+            <input asp-for="DevisFile" class="form-control" style="width:100%" />
+            <span asp-validation-for="DevisFile" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Ajouter" style="float:right;" class="btn btn-success" />
+        </div>
+    </form>
+</div>

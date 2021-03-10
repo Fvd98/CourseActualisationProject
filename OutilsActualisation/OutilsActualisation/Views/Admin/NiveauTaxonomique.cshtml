@@ -1,0 +1,51 @@
+﻿@model OutilsActualisation.AppData.ModeleTaxonomique
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Liste des niveaux taxonomiques du modèle <strong>@Model.Nom</strong></h4>
+</div>
+
+<div class="modal-body">
+
+    <a style="margin-bottom:7px; margin-right:5%; float:right" class="btn btn-success" onclick="AjaxFill('/Admin/NiveauTaxonomique_Create', '#ModalContainer', true)">Créer un niveau taxonomique</a>
+
+    @if (Model.NiveauTaxonomique.Count() != 0)
+    {
+        <table class="tableD">
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NiveauTaxonomique.First().Terme)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.NiveauTaxonomique)
+                {
+                    <tr>
+                        <td style="width:40px; padding: 5px 5px;">
+                            <a class="btn btn-default glyphicon glyphicon-arrow-up" style="padding:6px 8px 6px 6px"></a><a class="btn btn-default glyphicon glyphicon-arrow-down" style="padding:6px 8px 6px 6px;"></a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Terme)
+                        </td>
+                        <td style="padding-right:0; width: 124px;">
+                            <span style="width:109px;" class="btn btn-warning" onclick="AjaxFill('/Admin/NiveauTaxonomique_Update?id=@item.Id', '#ModalContainer', true);"><span style="margin-right:7px;" class="glyphicon glyphicon-pencil"></span>Modifier</span>
+                            <a style="width:109px; margin-top: 3.5px;" class="btn btn-danger" data-ajax-url="/Admin/NiveauTaxonomique_Delete?id=@item.Id" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Admin/NiveauTaxonomique?id=@ViewBag.ModID', '#ModalContainer', false);" data-ajax-failure="Alert('error', xhr.responseText)"><span style="margin-right:7px;" class="glyphicon glyphicon-trash"></span>Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun niveau pour ce modèle taxonomique...</p>
+    }
+</div>
+
+
+

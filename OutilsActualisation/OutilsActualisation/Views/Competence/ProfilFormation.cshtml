@@ -1,0 +1,60 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.ProfilFormation>
+@{
+    int Increment = 0;
+}
+
+<!--Content-->
+<div style="height: calc(100vh - (1vh + 11.25vw + 111px));max-height: calc(100vh - (5vh + 11.25vw)); overflow-y:auto;">
+    <h2 style="margin-top:0px;">Création des profils de formation<span style="float:right;" class="btn btn-success" onclick="AjaxFill('/Competence/ProfilFormation_Create', '#ModalContainer', false);">Ajouter un profil de formation</span></h2>
+    <p>
+        Cette étape sert à créer les profils de formation pour le programme actualisé.
+    </p>
+
+    @if (Model.Count() != 0)
+    {
+        @foreach (var Profil in Model)
+        {
+            <span class="btn btn-dark btn-success" style="width:100%; padding:6px;" data-toggle="collapse" data-target="#collapse_@Increment" aria-controls="collapse_@Increment">
+                @Profil.Nom
+                <a title="Supprimer le profil" data-ajax-url="/Competence/ProfilFormation_Delete?id=@Profil.Id" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/ProfilFormation', '#ContentContainer', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; float:right;" class="btn btn-danger glyphicon glyphicon-trash"></a>
+                <span title="Modifier le profil" onclick="AjaxFill('/Competence/ProfilFormation_Update?id=@Profil.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-warning glyphicon glyphicon-pencil"></span>
+                <span title="Modifier les compétences pour le profil" onclick="AjaxFill('/Competence/ProfilFormation_Competence?id=@Profil.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-primary glyphicon glyphicon-list"></span>
+            </span>
+            <div class="collapse" id="collapse_@Increment">
+                <div style="background-color:rgba(255, 255, 255, 0.54); margin:0 2px 2px 2px; padding: 0 15px 15px 15px; border-radius: 0 0 4px 4px;">
+                    @if (Profil.CompetenceProfilFormation.Count() != 0)
+                    {
+                        <table class="ombre">
+                            @foreach (var Competence in Profil.CompetenceProfilFormation.OrderBy(C => C.CompetenceNavigation.IsObligatoire))
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-light" style="width: 45px;height:18px;background-color:#343a40;color:white; border-radius:3px; float:left; vertical-align:central;margin-top:2px; margin-right:6px;">@Competence.Competence</span>
+                                        <span style="padding:0 5px; font-size:12px; float:left; margin:3px 6px 2px 0;">
+                                            @Competence.CompetenceNavigation.Enonce
+                                        </span>
+                                        <a data-ajax-url="/Competence/ProfilFormation_Competence?idCompetence=@Competence.Competence&idProfil=@Competence.ProfilFormation&Ajouter=false" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/ProfilFormation', '#ContentContainer', false);" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; margin-top: 1px;" class="btn btn-danger glyphicon glyphicon-remove @if (Competence.CompetenceNavigation.IsObligatoire ?? true) {@Html.Raw("disabled")}"></a>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <br />
+                        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucune compétence pour ce profil de formation...</p>
+                        <br />
+                    }
+                </div>
+            </div>
+        <div style="width:100%; height:7px;"></div>
+        Increment++;
+        }
+    }
+    else
+    {
+        <br />
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun profil de formation pour cette actualisation...</p>
+        <br />
+    }
+</div>

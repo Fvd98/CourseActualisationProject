@@ -1,0 +1,34 @@
+﻿@model OutilsActualisation.AppData.Competence
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Modifier la compétence @Model.Code</h4>
+</div>
+<div class="modal-body">
+    <form asp-controller="Devis" asp-action="Competence_Update" data-ajax="true" data-ajax-method="POST" data-ajax-success="if(xhr.responseText.includes('<div')) { $('#ModalContainer').html(xhr.responseText); } else { AjaxFill('/Devis/Competence', '#ContentContainer', false); CloseModal(); Alert('success',xhr.responseText); }" data-ajax-failure="Alert('error', xhr.responseText)" style="margin-bottom:45px;">
+        <div class="form-group">
+            <label asp-for="Code" class="control-label"></label>
+            <input readonly type="text" asp-for="Code" class="form-control" style="width:100%" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Enonce" class="control-label"></label>
+            <input type="text" asp-for="Enonce" class="form-control" style="width:100%" />
+            <span asp-validation-for="Enonce" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ContextesRealisation" class="control-label"></label>
+            <textarea type="text" asp-for="ContextesRealisation" class="form-control" onkeyup="TextAreaAdjust(this)"></textarea>
+            <span asp-validation-for="ContextesRealisation" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IsObligatoire" class="control-label"></label><br/>
+            <span style="width:30px; display:inline-block;">Oui</span><input style="margin-left:7px;" type="radio" checked name="IsObligatoire" value="true" /><br />
+            <span style="width:30px; display:inline-block;">Non</span><input style="margin-left:7px;" type="radio" name="IsObligatoire" value="false" />
+            <span asp-validation-for="IsObligatoire" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Modifier" style="float:right;" class="btn btn-warning" />
+        </div>
+    </form>
+</div>

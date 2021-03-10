@@ -1,0 +1,35 @@
+﻿@model OutilsActualisation.AppData.Actualisation
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    table,th,td{
+        border:none!important;
+    }
+</style>
+<h2>Détails de la formation générale <strong>@Model.Nom</strong></h2>
+
+<div class="card card-body" style="padding-top:10px;">
+
+    <div class="container" style="width:inherit;">
+        <ul class="nav nav-tabs" style="display:flex;">
+            <li style="flex-grow:1; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Admin/FormationGenerale_Competence', '#menu', false);" class="active"><a data-toggle="tab" style="color:black;">Compétences</a></li>
+            <li style="flex-grow:1; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Admin/FormationGenerale_Cours', '#menu', false);"><a data-toggle="tab" style="color:black;">Cours</a></li>
+            <li style="flex-grow:1; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Admin/FormationGenerale_ChoixCours', '#menu', false);"><a data-toggle="tab" style="color:black; margin-right:0;">Choix de cours</a></li>
+        </ul>
+
+        <div class="tab-content" style="background-color:white; border:1px solid #ddd; border-top:0;  padding:15px; word-break:break-word;">
+            <div id="menu" class="tab-pane fade in active" style="padding:1% 5%;">
+ 
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        AjaxFill('/Admin/FormationGenerale_Competence', '#menu', false);
+    </script>
+}
+
+

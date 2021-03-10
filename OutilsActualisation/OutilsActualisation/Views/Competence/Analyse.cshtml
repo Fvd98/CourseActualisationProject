@@ -1,0 +1,75 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.CompetenceAnalyse>
+@{
+    int Increment = 0;
+    string IsObl = "Obl.";
+    string IsOpt = "Opt.";
+}
+
+<!--Content-->
+<div style="height: calc(100vh - (1vh + 11.25vw + 111px));max-height: calc(100vh - (5vh + 11.25vw)); overflow-y:auto;">
+    <h2 style="margin-top:0px;">Analyse des compétences</h2>
+    <p>
+        Cette étape sert à analyser les compétences entrées dans l'étape précédente en leur attribuant un niveau taxonomique, une reformalution et un contexte, ainsi que des attitudes et méthodes.
+    </p>
+
+    @if (Model.Count() != 0)
+    {
+        @* COLLAPSIBLE POUR CHAQUE COMPÉTENCE *@
+        @foreach (var CompetenceAnalyse in Model.ToList())
+        {
+            <div class="btn btn-dark btn-success" style="width:100%; padding:6px; position:relative;" type="button" data-toggle="collapse" data-target="#collapse_@Increment" aria-controls="collapse_@Increment">
+                <span style="width:100px; float:left; text-align:left;">
+                    <span class="badge badge-light" style="color:black; border-radius:3px; vertical-align:central;margin-top:2px; font-weight:bold;">
+                        @if (CompetenceAnalyse.CompetenceNavigation.IsObligatoire ?? true)
+                        {@IsObl}
+                    else
+                    {@IsOpt}
+                    </span>
+                    <span class="badge badge-light" style="width: 45px;color:black; border-radius:3px; vertical-align:central;margin-top:2px;">@CompetenceAnalyse.CompetenceNavigation.Code</span>
+                </span>
+
+                <span style="font-weight:bold; width: calc(100% - 100px); overflow:hidden; display:inline-block; float: left; font-size:1.05em;">@CompetenceAnalyse.CompetenceNavigation.Enonce</span>
+                <div style="width:100px; height:100%;position:absolute; right:-6px; top:0; font-size:10px; padding:2px 5px; float:right; margin-right:6px; background-image:linear-gradient(to right, rgba(52, 58, 64,0) , rgba(52, 58, 64,1) 80%);"></div>
+            </div>
+
+            <div class="collapse" id="collapse_@Increment">
+                <div style="background-color:rgba(255, 255, 255, 0.54); margin:0 2px 2px 2px; padding: 0 15px 15px 15px;  border-radius: 0 0 4px 4px;">
+                    <div style="background-color: white;padding: 8px;border-radius: 0 0 4px 4px;margin-bottom: 15px;border: 0.5px solid #343a40;border-top: 0;">
+                        <strong>Contextes de réalisation :<br /></strong> @Html.Raw(CompetenceAnalyse.CompetenceNavigation.ContextesRealisation)
+                    </div>
+                    <div class="container" style="width:inherit; padding:0px;">
+                        <ul class="nav nav-tabs" style="display:flex;">
+                            <li style="flex-grow:1; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Competence/Analyse_Taxonomie?id=@CompetenceAnalyse.CompetenceNavigation.Code', '#menu_@CompetenceAnalyse.Id', false);" class="active"><a data-toggle="tab" style="color:black;">Taxonomies</a></li>
+                            <li style="flex-grow:1; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Competence/Analyse_Reformulation?id=@CompetenceAnalyse.Id', '#menu_@CompetenceAnalyse.Id', false);"><a data-toggle="tab" style="color:black;">Reformulation et contexte</a></li>
+                            <li style="flex-grow:1; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Competence/Analyse_CompetenceAttitudeMethode?id=@CompetenceAnalyse.Id', '#menu_@CompetenceAnalyse.Id', false);"><a data-toggle="tab" style="color:black; margin-right:0;">Attitudes et méthodes</a></li>
+                        </ul>
+
+                        <div class="tab-content" style="background-color:white; border:1px solid #ddd; border-top:0;  padding:15px; word-break:break-word;">
+                            <div id="menu_@CompetenceAnalyse.Id" class="tab-pane fade in active" style="">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="height:7px;"></div>
+            Increment++;
+            <script>
+                AjaxFill('/Competence/Analyse_Taxonomie?id=@CompetenceAnalyse.CompetenceNavigation.Code', '#menu_@CompetenceAnalyse.Id', false);
+            </script>
+        }
+        
+    }
+    else
+    {
+        <br />
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucune compétence pour cette actualisation...</p>
+        <br />
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+</script>

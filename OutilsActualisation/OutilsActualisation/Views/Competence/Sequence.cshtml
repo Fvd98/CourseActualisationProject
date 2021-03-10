@@ -1,0 +1,71 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.SequenceCompetence>
+@{
+    int Increment = 0;
+}
+
+<br />
+<h3 style="margin-top:0px;">Création des séquences de compétences<span style="float:right;" class="btn btn-success" onclick="AjaxFill('/Competence/Sequence_Create', '#ModalContainer', false);">Ajouter une séquence</span></h3>
+<p>
+    Cette étape sert à créer les séquences de compétences pour le programme actualisé.
+</p>
+
+@if (Model.Count() != 0)
+{
+    @foreach (var Sequence in Model)
+    {
+        <span class="btn btn-dark btn-success" style="width:100%; padding:6px;" data-toggle="collapse" data-target="#collapse_@Increment" aria-controls="collapse_@Increment">
+            @Sequence.Nom
+            <a title="Supprimer la séquence" data-ajax-url="/Competence/Sequence_Delete?id=@Sequence.Id" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/Sequence', '#menu', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; float:right;" class="btn btn-danger glyphicon glyphicon-trash"></a>
+            <span title="Modifier la séquence" onclick="AjaxFill('/Competence/Sequence_Update?id=@Sequence.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-warning glyphicon glyphicon-pencil"></span>
+            <span title="Modifier les compétences pour la séquence" onclick="AjaxFill('/Competence/Sequence_Competence?id=@Sequence.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-primary glyphicon glyphicon-list"></span>
+        </span>
+        <div class="collapse" id="collapse_@Increment">
+            <div style="background-color:rgba(255, 255, 255, 0.54); margin:0 2px 2px 2px; padding: 0 15px 15px 15px; border-radius: 0 0 4px 4px;">
+                @if (Sequence.SequenceCompetenceCompetence.Count() != 0)
+                {
+                    bool first = true;
+                    string C1 = null;
+                    <table class="ombre">
+                        @foreach (var Competence in Sequence.SequenceCompetenceCompetence.OrderBy(SCC => SCC.Ordre))
+                        {
+                            if (!first)
+                            {
+                                <tr>
+                                    <td>
+                                        <span style="margin-left: 15px; line-height:28px;" class="glyphicon glyphicon-chevron-down"></span>
+                                        <a data-ajax-url="/Competence/Sequence_Competence_Swap?idSequence=@Sequence.Id&idC1=@C1&idC2=@Competence.Competence" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/Sequence', '#menu', false);" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:11.5px; padding:2px 5px; margin-top: 1px;" class="btn btn-default glyphicon glyphicon-sort"></a>
+                                    </td>
+                                </tr>
+                            }
+                            C1 = Competence.Competence;
+                            <tr>
+                                <td>
+                                    <span class="badge badge-light" style="width: 45px;height:18px;background-color:#343a40;color:white; border-radius:3px; float:left; vertical-align:central;margin-top:2px; margin-right:6px;">@Competence.Competence</span>
+                                    <span style="padding:0 5px; font-size:12px;text-align: center!important; float:left; margin:3px 6px 2px 0;">
+                                        @Competence.CompetenceNavigation.Enonce
+                                    </span>
+                                    <a data-ajax-url="/Competence/Sequence_Competence?idCompetence=@Competence.Competence&idSequence=@Competence.SequenceCompetence&Ajouter=false" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/Sequence', '#menu', false);" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; margin-top: 1px;" class="btn btn-danger glyphicon glyphicon-remove"></a>
+                                </td>
+                            </tr>
+                            first = false;
+                        }
+                    </table>
+                }
+                else
+                {
+                    <br />
+                    <p style="font-weight:bold; font-size:17px; text-align:center;">Aucune compétence pour cette séquence...</p>
+                    <br />
+                }
+            </div>
+        </div>
+        <div style="width:100%; height:7px;"></div>
+        Increment++;
+    }
+}
+else
+{
+    <br />
+    <p style="font-weight:bold; font-size:20px; text-align:center;">Aucune famille de compétences pour cette actualisation...</p>
+    <br />
+}

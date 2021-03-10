@@ -1,0 +1,89 @@
+﻿@model OutilsActualisation.Models.ActualisationViewModal
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    td{
+        text-align:right;
+        padding:5px;
+    }
+    label{
+        margin-right: 10px;
+    }
+</style>
+<h2 style="text-align:center;">Créer une actualisation</h2>
+
+<hr />
+<form asp-action="Actualisation_Create" style="max-width:45%; margin:auto; margin-top:5%;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <table class="tableD" style="width:100%">
+        <tr>
+            <td>
+                <label asp-for="Nom" class="control-label"></label>
+            </td>
+            <td>
+                <input asp-for="Nom" class="form-control" />
+                <span asp-validation-for="Nom" style="float:left;" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="IsTotal" class="control-label"></label>
+            </td>
+            <td>
+                <span style="width:60px; display:inline-block;">Totale</span><input style="margin-left:7px;" type="radio" checked name="IsTotal" value="true" /><br />
+                <span style="width:60px; display:inline-block;">Partielle</span><input style="margin-left:7px;" type="radio" name="IsTotal" value="false" />
+                <span asp-validation-for="IsTotal" style="float:left;" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="Devis" class="control-label"></label>
+            </td>
+            <td>
+                <input asp-for="Devis" type="hidden" class="form-control" />
+                <a id="DevisCreate" class="btn btn-info form-control" onclick="AjaxFill('/Actualisation/Devis_Create?Name=le%20devis&ID=Devis', '#ModalContainer', false);">Ajouter un devis</a>
+                <span asp-validation-for="Devis" style="float:left;" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="AncienDevis" class="control-label"></label>
+            </td>
+            <td>
+                <input asp-for="AncienDevis" type="hidden" hidden class="form-control" />
+                <a id="AncienDevisCreate" class="btn btn-info form-control" onclick="AjaxFill('/Actualisation/Devis_Create?Name=l%27ancien%20devis&ID=AncienDevis', '#ModalContainer', false);">Ajouter un devis</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="AncienneActualisation" class="control-label"></label>
+            </td>
+            <td>
+                <select asp-for="AncienneActualisation" asp-items="Model.selectListActualisations" class="form-control">
+                    <option value=""></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="form-group">
+                    <input style="width:100%;margin-top:25px;" type="submit" value="Suivant" class="btn btn-success" />
+                </div>
+            </td>
+        </tr>
+    </table> 
+</form>
+@section Scripts
+{ 
+    <script>
+        function DevisCreated(Name, DevisID) {
+            $("#" + Name + "Create").addClass("disabled").append("<span style='float:right;' class='glyphicon glyphicon-ok'></span>");
+            $("#" + Name).val(DevisID);
+        }     
+    </script>
+}
+
+

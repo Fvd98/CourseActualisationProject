@@ -1,0 +1,17 @@
+﻿<div style="height: calc(100vh - (1vh + 11.25vw + 111px));max-height: calc(100vh - (5vh + 11.25vw)); overflow-y:auto;">
+    <div class="container" style="width:inherit; padding:0px;">
+        <ul class="nav nav-tabs" style="display:flex;">
+            <li style="flex-grow:1; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Competence/Famille', '#menu', false);" class="active"><a data-toggle="tab" style="color:black;">Familles</a></li>
+            <li style="flex-grow:1; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Competence/Sequence', '#menu', false);"><a data-toggle="tab" style="color:black; margin-right:0;">Séquences</a></li>
+        </ul>
+
+        <div class="tab-content" style="background-color:white; border:1px solid #ddd; border-top:0;  padding:15px; word-break:break-word;">
+            <div id="menu" class="tab-pane fade in active" style="">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    AjaxFill('/Competence/Famille', '#menu', false);
+</script>

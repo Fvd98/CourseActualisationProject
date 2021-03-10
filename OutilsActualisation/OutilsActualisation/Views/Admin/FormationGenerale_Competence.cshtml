@@ -1,0 +1,29 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.CompetenceAnalyse>
+
+
+<h3 style="margin-top:10px;">Liste des compétences de la formation générale<span style="float:right;" class="btn btn-success" onclick="AjaxFill('/Admin/FormationGenerale_Competence_Create', '#ModalContainer', false);">Ajouter une compétence</span></h3>
+<br />
+<style>
+    .btn-dark:hover {
+        background-color: #343a40 !important;
+        cursor: inherit;
+    }
+</style>
+@if (Model.Count() != 0)
+{
+    @foreach (var item in Model)
+    {
+        <span class="btn btn-dark btn-success" style="width:100%; padding:6px; margin-bottom: 7px;">
+            <span class="badge badge-light" style="color:black; border-radius:3px; float:left; vertical-align:central;margin-top:2px; margin-right:6px;">@item.CompetenceNavigation.Code</span>
+            @item.CompetenceNavigation.Enonce
+            <a title="Supprimer la compétence" data-ajax-url="/Admin/FormationGenerale_Competence_Delete?id=@item.CompetenceNavigation.Code" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Admin/FormationGenerale_Competence', '#menu', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; float:right;" class="btn btn-danger glyphicon glyphicon-trash"></a>
+            <span title="Modifier la compétence" onclick="AjaxFill('/Admin/FormationGenerale_Competence_Update?id=@item.CompetenceNavigation.Code', '#ModalContainer', false);" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-warning glyphicon glyphicon-pencil"></span>
+        </span>
+    }
+}
+else
+{
+    <br />
+    <p style="font-weight:bold; font-size:20px; text-align:center;">Aucune compétences pour cette formation générale...</p>
+    <br />
+}

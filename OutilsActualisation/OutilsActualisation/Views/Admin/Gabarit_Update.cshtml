@@ -1,0 +1,26 @@
+﻿@model OutilsActualisation.AppData.Gabarit
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Modifier un gabarit</h4>
+</div>
+<div class="modal-body">
+    <form asp-controller="Admin" asp-action="Gabarit_Update" data-ajax="true" data-ajax-method="POST" data-ajax-success="if(xhr.responseText.includes('<div')) { $('#ModalContainer').html(xhr.responseText); } else { location.reload(); }" data-ajax-failure="Alert('error', xhr.responseText)" style="margin-bottom:45px;">
+        <div class="form-group">
+            <label asp-for="Nom" class="control-label"></label>
+            <input type="text" asp-for="Nom" class="form-control" style="width:100%" />
+            <span asp-validation-for="Nom" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IsDefault" class="control-label"></label><br />
+            <span style="width:30px; display:inline-block;">Oui</span><input asp-for="IsDefault" style="margin-left:7px;" type="radio" value="true" /><br />
+            <span style="width:30px; display:inline-block;">Non</span><input asp-for="IsDefault" style="margin-left:7px;" type="radio" value="false" />
+            <span asp-validation-for="IsDefault" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="TypeGabarit" />
+        <div class="form-group">
+            <input type="submit" value="Modifier" style="float:right;" class="btn btn-warning" />
+        </div>
+    </form>
+</div>

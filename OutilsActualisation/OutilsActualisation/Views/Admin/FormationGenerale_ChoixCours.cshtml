@@ -1,0 +1,56 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.ChoixCours>
+@{
+    int Increment = 0;
+}
+
+
+<h3 style="margin-top:10px;">Liste des choix de cours de la formation générale<span style="float:right;" class="btn btn-success" onclick="AjaxFill('/Admin/FormationGenerale_ChoixCours_Create', '#ModalContainer', false);">Ajouter un choix cours</span></h3>
+<br />
+
+@if (Model.Count() != 0)
+{
+    @foreach (var ChoixCours in Model)
+    {
+
+        <span class="btn btn-dark btn-success" style="width:100%; padding:6px;" data-toggle="collapse" data-target="#collapse_@Increment" aria-controls="collapse_@Increment">
+            <span class="badge badge-light" style="color:black; border-radius:3px; float:left; vertical-align:central;margin-top:2px; margin-right:6px;"></span>
+            @ChoixCours.Nom
+            <a title="Supprimer le choix de cours" data-ajax-url="/Admin/FormationGenerale_ChoixCours_Delete?id=@ChoixCours.Id" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Admin/FormationGenerale_ChoixCours', '#menu', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; float:right;" class="btn btn-danger glyphicon glyphicon-trash"></a>
+            <span title="Modifier le nom du choix de cours" onclick="AjaxFill('/Admin/FormationGenerale_ChoixCours_Update?id=@ChoixCours.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-warning glyphicon glyphicon-pencil"></span>
+            <span title="Modifier les cours pour le choix de cours" onclick="AjaxFill('/Admin/FormationGenerale_ChoixCours_Cours?id=@ChoixCours.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-primary glyphicon glyphicon-list"></span>
+        </span>
+        <div class="collapse" id="collapse_@Increment">
+            <div style="background-color:rgba(200, 200, 200, 0.54); margin:2px; margin-top:0; padding: 10px; border-radius: 0 0 4px 4px;">
+                @if (ChoixCours.ChoixCoursCours.Count() != 0)
+                {
+                    @foreach (var ChoixCoursCours in ChoixCours.ChoixCoursCours)
+                    {
+                        <div style="display:flex">
+                            <span class="badge badge-light" style="height:18px;background-color:#343a40;color:white; border-radius:3px; float:left; vertical-align:central;margin-top:2px; margin-right:6px;">@ChoixCoursCours.CoursNavigation.Sigle</span>
+                            <label style="text-align:left; flex-grow: 1;">
+                                @ChoixCoursCours.CoursNavigation.Titre
+                                <a data-ajax-url="/Admin/FormationGenerale_ChoixCours_Cours?idCours=@ChoixCoursCours.Cours&idChoixCours=@ChoixCoursCours.ChoixCours&Ajouter=false" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Admin/FormationGenerale_ChoixCours', '#menu', false);" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; float:right;" class="btn btn-danger glyphicon glyphicon-remove"></a>
+                            </label>
+                        </div>
+
+                    }
+                }
+                else
+                {
+                    <br />
+                    <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun cours pour ce choix de cours...</p>
+                    <br />
+                }
+
+            </div>
+        </div>
+        <div style="width:100%; height:7px;"></div>
+        Increment++;
+    }
+}
+else
+{
+    <br />
+    <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun choix de cours pour cette formation générale...</p>
+    <br />
+}

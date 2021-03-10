@@ -1,0 +1,94 @@
+﻿@model OutilsActualisation.AppData.InstanceHeureCompetence
+@{ 
+    int increment = 1;
+}
+<style>
+    .th-td-repartition {
+        width: 28px;
+        text-align: center;
+    }
+
+    .th-td-repartition-tot {
+        width: 39px;
+        text-align: center;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #e5e5e5;
+    }
+
+    .tableD, .tableD tr th, .tableD tr td {
+        border: 0;
+    }
+</style>
+
+@if (ViewBag.HeureMin == null || ViewBag.HeureMax == null)
+{
+    <br/>
+    <div style="font-weight:bold; text-align:center;">Cette étape requiert que vous ayez entré le nombre d'heures total minimum et maximum de la formation spécifique à l'étape Devis - Unités et heures.</div>
+    <br />
+}
+else
+{
+    <div>Le nombre d'heures total de la formation spécifique doit être entre <span style="font-weight:bold;" id="HeureMin">@ViewBag.HeureMin</span> et <span id="HeureMax" style="font-weight:bold;">@ViewBag.HeureMax</span></div>
+    <br />
+    <table style="width:100%!important;" class="tableD table-striped">
+        <thead>
+            <tr>
+                <th style="background-color: #1d1f21; text-align:left!important;">Compétence</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S1</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S2</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S3</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S4</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S5</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S6</th>
+                <th class="th-td-repartition-tot">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Competence in Model.ProfilFormationNavigation.CompetenceProfilFormation.ToList())
+            {
+                <tr>
+                    <td style="text-align:left!important;">@Competence.CompetenceNavigation.Code - @Competence.CompetenceNavigation.Enonce</td>
+                    @for (int i = 1; i <= 6; i++)
+                    {
+                        OutilsActualisation.AppData.HeureComp heureComp = Model.HeureComp.Where(HC => HC.Competence == Competence.Competence && HC.NoSession == i).FirstOrDefault();
+                        <td>
+                            <form asp-controller="Competence" asp-action="RepartitionHeure" data-ajax="true" data-ajax-method="POST" data-ajax-success="$('#nouveau_@Html.Raw(i)_@Competence').val($('#input_@Html.Raw(i)_@Competence').val() != ''); updateTable(@Model.ProfilFormationNavigation.CompetenceProfilFormation.ToList().Count(), @ViewBag.HeureMin, @ViewBag.HeureMax);" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+                                <input id="nouveau_@Html.Raw(i)_@Competence" type="hidden" name="nouveau" value="@Html.Raw(heureComp==null)" />
+                                <input type="hidden" name="NoSession" value="@i" />
+                                <input type="hidden" name="Competence" value="@Competence.Competence" />
+                                <input type="hidden" name="InstanceHeureCompetence" value="@Model.Id" />
+                                <input type="text" name="NbHeure" id="input_@Html.Raw(i)_@Competence" class="form-control th-td-repartition C_@increment S_@i" maxlength="2" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { $(event.target.parentElement).submit(); }" value="@if (heureComp != null) { @heureComp.NbHeure }" style="padding:0;" />
+                            </form>
+
+                        </td>
+                    }
+                    <td style="background-color: #343a40;"><input class="form-control th-td-repartition-tot Tot_C_@increment" style="background-color: #1d1f21; font-weight: bold; padding: 0; text-align: center; border: 0;color: white; margin: auto; width: 28px;" readonly /></td>
+                </tr>
+                increment++;
+            }
+            <tr style="background-color:#343a40; color:white;">
+                <td style="text-align:left!important; font-weight: bold;">Total</td>
+                @for (int i = 1; i <= 6; i++)
+                {
+                    <td><input style="background-color: #1d1f21; font-weight: bold; padding: 0; text-align: center; border: 0;color: white; padding:0; text-align:center;" class="form-control Tot_S Tot_S_@i" readonly /></td>
+                }
+                <td><input class="form-control Tot_SC" style="background-color: #1d1f21; font-weight: bold; padding: 0; text-align: center; border: 0;color: white; margin: auto; width: 28px;" readonly /></td>
+            </tr>
+            <tr>
+                <td colspan="8" style="text-align:right;background-color: #1d1f21; font-weight: bold;color:white">
+                    Total d'heures actuel = <span id="totalHebdo"></span> heures X 15 semaines = <span id="reelTotal"></span> heures totales du programme
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        $(function () {
+            updateTable(@increment-1, @ViewBag.HeureMin, @ViewBag.HeureMax);
+        });
+        
+    </script>
+}
+

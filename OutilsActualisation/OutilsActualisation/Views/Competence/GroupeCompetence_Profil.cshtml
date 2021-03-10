@@ -1,0 +1,109 @@
+﻿@model GroupeViewModel
+@{
+    int increment = 1;
+    string TableauCouleur = "";
+}
+<script>
+    var couleurs = {
+        @foreach (var groupe in Model.instance.GroupeCompetence)
+        {
+            TableauCouleur += "'" + groupe.Id + "' : '" + groupe.Couleur + "',";
+        }
+        @if (TableauCouleur.Length != 0) {
+            TableauCouleur.Remove(TableauCouleur.Length - 1);
+        }
+        @Html.Raw(TableauCouleur)
+    };
+</script>
+<style>
+    #selectGroupe:focus {
+        outline: 0;
+    }
+
+    .th-td-repartition {
+        width: 28px;
+        text-align: center;
+    }
+
+    .th-td-repartition-tot {
+        width: 39px;
+        text-align: center;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #e5e5e5;
+    }
+
+    .tableD, .tableD tr th, .tableD tr td {
+        border: 0;
+    }
+</style>
+<div style="float:right;">
+    <div style="float:right">
+        <form asp-controller="Competence" asp-action="GroupeCompetence_Delete" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error', xhr.responseText)" data-ajax-success="Alert('success', xhr.responseText); AjaxFill('/Competence/GroupeCompetence_Profil?id=@ViewBag.Profil', '#menu', false);">
+            <select id="selectGroupe" name="id" class="btn btn-default" style="@Html.Raw(Model.instance.GroupeCompetence.Count != 0?"border-color:"+Model.instance.GroupeCompetence.First().Couleur+";":"") display:inline-block; border-right:0; height:30px; border-radius: 4px 0 0 4px; margin-left:4px; width:250px;" asp-items="Model.selectList" onchange="$(event.target).css('border-color', couleurs[$(event.target).val()])"></select><span onclick="AjaxFill('/Competence/GroupeCompetence_Create?idInstance=@Model.instance.Id&idProfil=@ViewBag.Profil', '#ModalContainer', false)" class="btn btn-success" style="display:inline-block; height:30px; line-height: 30px; padding: 0 6px 0px 7px; border-left:0; border-radius:0"><span class="glyphicon glyphicon-plus"></span></span><span onclick="AjaxFill('/Competence/GroupeCompetence_Update?idGroupe=' + $('#selectGroupe').val() + '&idProfil=@ViewBag.Profil', '#ModalContainer', false)" class="btn btn-warning" style="display:inline-block; height:30px; line-height: 30px; padding: 0 6px 0px 7px; border-left:0; border-radius:0"><span class="glyphicon glyphicon-edit"></span></span><span onclick="$(event.target.parentElement).submit();" class="btn btn-danger" style="display:inline-block; height:30px; line-height: 30px; padding: 0 6px 0px 7px; border-left:0; border-radius:0 4px 4px 0"><span class="glyphicon glyphicon-remove"></span></span>
+        </form>
+    </div>
+    <div style="float:right; line-height: 30px;">Selectionnez un groupe de compétence : </div>
+</div>
+<br /> <br />
+<div id="inner_menu">
+    <table style="width:100%!important;" class="tableD table-striped">
+        <thead>
+            <tr>
+                <th style="background-color: #1d1f21; text-align:left!important;">Compétence</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S1</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S2</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S3</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S4</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S5</th>
+                <th style="background-color: #1d1f21;" class="th-td-repartition">S6</th>
+                <th class="th-td-repartition-tot">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Competence in Model.instance.ProfilFormationNavigation.CompetenceProfilFormation.Select(CPF => CPF.CompetenceNavigation).ToList())
+            {
+                <tr>
+                    <td style="text-align:left!important;">@Competence.Code - @Competence.Enonce</td>
+                    @for (int i = 1; i <= 6; i++)
+                    {
+                        OutilsActualisation.AppData.HeureComp heureComp = Model.instance.HeureComp.Where(HC => HC.Competence == Competence.Code && HC.NoSession == i).FirstOrDefault();
+                        <td>
+                            <form asp-controller="Competence" asp-action="GroupeCompetence_Profil" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+                                <input id="nouveau_@Html.Raw(i)_@Competence.Code" type="hidden" name="nouveau" value="@Html.Raw(heureComp == null)" />
+                                <input type="hidden" name="NoSession" value="@i" />
+                                <input type="hidden" name="Competence" value="@Competence.Code" />
+                                <input type="hidden" name="InstanceHeureCompetence" value="@Model.instance.Id" />
+                                <input id="input_@Html.Raw(i)_@Competence.Code" type="hidden" name="GroupeCompetence" @Html.Raw(heureComp != null ? heureComp.GroupeCompetence != null ? "value=\"" + heureComp.GroupeCompetence + "\"" : "" : "") />
+                                <div id="btn_@Html.Raw(i)_@Competence.Code" class="btn btn-default @Html.Raw(heureComp == null ? "disabled" : "")" style="@Html.Raw(heureComp != null ? heureComp.GroupeCompetence != null ? heureComp.GroupeCompetenceNavigation.Couleur != null ? "background-color: " + heureComp.GroupeCompetenceNavigation.Couleur + ";" : "" : "" : ""); cursor:@Html.Raw(heureComp != null ? "pointer" : "default");" onclick="@Html.Raw(heureComp != null ? "var Reset = $('#input_" + i + "_" + Competence.Code + "').val() == $('#selectGroupe').val() ;$('#input_" + i + "_" + Competence.Code + "').val(Reset?'':$('#selectGroupe').val()); $('#btn_" + i + "_" + Competence.Code + "').css('background-color', Reset?'':couleurs[$('#input_" + i + "_" + Competence.Code + "').val()]); $(event.target.parentElement).submit();" : "")">
+                                    <input type="text" readonly class="form-control th-td-repartition C_@increment S_@i" maxlength="2" value="@if (heureComp != null) { @heureComp.NbHeure }" style="padding:0; cursor:@Html.Raw(heureComp != null ? "pointer" : "default"); @Html.Raw(heureComp == null ? "background-color: #c5c5c5" : "");" />
+</div>
+
+</form>
+
+</td>
+                    }
+                    <td style="background-color: #343a40;"><input class="form-control th-td-repartition-tot Tot_C_@increment" style="background-color: #1d1f21; font-weight: bold; padding: 0; text-align: center; border: 0;color: white; margin: auto; width: 28px;" readonly /></td>
+                </tr>
+                increment++;
+            }
+            <tr style="background-color:#343a40; color:white;">
+                <td style="text-align:left!important; font-weight: bold;">Total</td>
+                @for (int i = 1; i <= 6; i++)
+                {
+                    <td><input style="background-color: #1d1f21; font-weight: bold; padding: 0; text-align: center; border: 0;color: white; padding:0; text-align:center;" class="form-control Tot_S Tot_S_@i" readonly /></td>
+                }
+                <td><input class="form-control Tot_SC" style="background-color: #1d1f21; font-weight: bold; padding: 0; text-align: center; border: 0;color: white; margin: auto; width: 28px;" readonly /></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+        $(function () {
+            updateTable(@increment-1);
+        });
+
+</script>
+

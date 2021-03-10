@@ -1,0 +1,9 @@
+﻿<div style="width:15vw; position:absolute; left:0; top: calc(8.5vw + 2vh); margin-top: 20px;">
+    <div onclick="AjaxFill('/Cours/Creation', '#ContentContainer', false); ChangeSelect('smallstep','selected', $(event.target));" class="smallstep selected">Création des cours</div>
+    <div onclick="AjaxFill('/Cours/Choix', '#ContentContainer', false); ChangeSelect('smallstep','selected', $(event.target));" class="smallstep">Choix de cours</div>
+    <div onclick="AjaxFill('/Cours/FormationGenerale', '#ContentContainer', false); ChangeSelect('smallstep','selected', $(event.target));" class="smallstep">Formation Générale</div>
+    <div onclick="AjaxFill('/Cours/RepartitionHeure', '#ContentContainer', false); ChangeSelect('smallstep','selected', $(event.target));" class="smallstep">Répartition des heures</div>
+</div>
+<div id="ContentContainer" style="margin-left: 15vw; position:relative; height: calc(100vh - (1vh + 11.25vw + 111px));">
+    
+</div>

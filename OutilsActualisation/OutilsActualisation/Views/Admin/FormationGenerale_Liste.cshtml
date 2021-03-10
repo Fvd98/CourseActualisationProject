@@ -1,0 +1,52 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.Actualisation>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .flex-container > a, .flex-container > a:visited {
+        background-color: #dc9191;
+        background-image: linear-gradient(to bottom left, rgb(255, 188, 118), rgb(187, 115, 165));
+        padding: 6px 15px;
+        border-radius: 3px;
+        margin: 8px;
+        line-height: 40px;
+        font-size: 30px;
+        flex-grow: 1;
+        color: black;
+        text-decoration: none;
+        font-size: 24px;
+    }
+
+    .flex-container > a:hover {
+        cursor: pointer;
+        background-image: linear-gradient(to bottom left, rgb(255, 218, 148), rgb(217, 145, 195));
+        color: black;
+    }
+
+    .dateCreation {
+        font-size: 16px !important;
+    }
+</style>
+
+<h2>Liste des formations générales<span class="btn btn-default" style="float:right; margin-right:8px;" onclick="AjaxFill('/Admin/FormationGenerale_Create', '#ModalContainer', false);">Ajouter une formation générale<span class="glyphicon glyphicon-plus" style="margin-left:7px;"></span></span></h2>
+
+<div class="flex-container">
+    @foreach (var item in Model)
+    {
+        <a asp-action="FormationGenerale" asp-controller="Admin" asp-route-id="@item.Id">
+            <div>
+                <span>@item.Nom</span><br />
+                <span class="dateCreation">@item.DateCreation</span>
+            </div>
+        </a>
+    }
+</div>
+
+

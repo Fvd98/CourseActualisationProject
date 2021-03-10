@@ -1,0 +1,46 @@
+﻿@model OutilsActualisation.AppData.Actualisation
+<!--Content-->
+<div style="height: calc(100vh - (1vh + 11.25vw + 111px));max-height: calc(100vh - (5vh + 11.25vw)); overflow-y:auto;">
+
+    <h2 style="margin-top:0px;">Ébauches du profil de sortie et de l'ÉSP</h2>
+    <div style="margin-bottom:7px;">
+        Cette étape sert à faire l’ébauche du profil de sortie et l'ébauche de l'épreuve-synthèse du programme.
+    </div>
+    <form asp-controller="Competence" asp-action="Ebauche_Update" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+        <table class="tableD">
+            <tr>
+                <th colspan="2">Ébauches</th>
+            </tr>
+            <tr>
+                <td style="text-align:left!important; line-height: 25px!important;">
+                    Faire l’ébauche du profil de sortie pour :
+                    <ul>
+                        <li>déterminer la cible à atteindre au terme de la formation;</li>
+                        <li>résumer la complexité et l’étendue de la formation;</li>
+                        <li>préciser les frontières de l’étendue de la formation;</li>
+                        <li>valider la compréhension des compétences à développer;</li>
+                        <li>
+                            garder le cap sur les objectifs à atteindre lors des discussions et des travaux.
+                        </li>
+                    </ul>
+                </td>
+                <td style="width:50%; position:relative;">
+                    <textarea asp-for="@Model.EbauchePs" class="form-control" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { $(event.target.parentElement).submit(); }" type="text" style="resize: none; position:absolute; width:calc(100% - 10px);height: calc(100% - 10px);top:0;left:0;margin:5px;" onkeyup="TextAreaAdjust(this)"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:left!important; line-height: 25px!important;">
+                    Faire une ébauche de l’ÉSP pour :
+                    <ul>
+                        <li>cerner un peu plus les objectifs, les contextes, vers quoi doit tendre la formation;</li>
+                        <li>déterminer comment évaluer tout cela;</li>
+                        <li>donner un sens concret à la formation sur tous les aspects de celle-ci.</li>
+                    </ul>
+                </td>
+                <td style="width:50%; position:relative;">
+                    <textarea asp-for="@Model.EbaucheEsp" class="form-control" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { $(event.target.parentElement).submit(); }" type="text" style="resize: none; position:absolute; width:calc(100% - 10px);height: calc(100% - 10px);top:0;left:0;margin:5px;overflow:hidden; width:100%" onkeyup="TextAreaAdjust(this)"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

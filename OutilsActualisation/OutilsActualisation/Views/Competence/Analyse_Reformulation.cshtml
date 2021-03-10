@@ -1,0 +1,15 @@
+﻿@model OutilsActualisation.AppData.CompetenceAnalyse
+
+<form asp-controller="Competence" asp-action="Analyse_Reformulation" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+    <div class="form-group">
+        <label asp-for="Reformulation" class="control-label"></label>
+        <p>Reformuler la compétence afin de mettre en évidence le niveau taxonomique que vous avez identifié en utilisant des concepts clefs qui renseignent sur le niveau à atteindre.</p>
+        <textarea asp-for="@Model.Reformulation" class="form-control" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { $(event.target.parentElement).submit(); }" type="text" style="resize: none;" onkeyup="TextAreaAdjust(this)"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="Contexte" class="control-label"></label>
+        <p>Reprendre les contextes spécifiés dans la compétence et ceux qui sont donnés explicitement ou implicitement dans les éléments de compétence qui permettent de situer le niveau attendu.</p>
+        <textarea asp-for="@Model.Contexte" class="form-control" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { $(event.target.parentElement).submit(); }" type="text" style="resize: none;" onkeyup="TextAreaAdjust(this)"></textarea>
+    </div>
+    <input asp-for="Id" type="hidden" />
+</form>

@@ -1,0 +1,117 @@
+﻿@model AnalyseTaxonomieViewModel
+
+<style>
+    .thead-taxo {
+        height: 55px;
+    }
+
+    .th-taxo {
+        position: relative;
+        width: 22px;
+    }
+    .span-taxo {
+        width: 90px;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        word-break: keep-all;
+        overflow: hidden;
+        transform: rotate(270deg) translate(-41px,-34px);
+    }
+
+</style>
+
+@if (Model.modelesDisponibles != null)
+{
+    <form asp-controller="Competence" asp-action="SetModeleTaxonomique" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/Analyse', '#ContentContainer', false);" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+        <div class="form-group">
+            <label class="control-label">Veuillez choisir le modèle taxonomique pour votre analyse :</label>
+            <select name="id" asp-items="Model.modelesDisponibles" class="form-control"></select>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Confirmer" class="form-control btn btn-primary" />
+        </div>
+    </form>
+}
+else
+{  
+    int i = Model.modeleTaxonomique.NiveauTaxonomique.ToList().Count + 2;
+    string Checked = "checked";
+
+    <table class="ombre">
+        <thead class="thead-taxo">
+            <tr style="color: #fff;background-color: #212529;border-color: #32383e;">
+                <th colspan="2" style="height: 104px;"></th>
+                @foreach (var NiveauTaxonomique in Model.modeleTaxonomique.NiveauTaxonomique.ToList())
+                {
+                    <th class="th-taxo"><span class="span-taxo">@NiveauTaxonomique.Terme</span></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td>
+                    <span style="font-weight:bold;">
+                        @Model.competenceAnalyse.CompetenceNavigation.Enonce
+                    </span>
+                </td>
+                @foreach (var NiveauTaxonomique in Model.modeleTaxonomique.NiveauTaxonomique.ToList())
+                {
+                    <td>
+                        <form asp-controller="Competence" asp-action="Analyse_Taxonomie" style="text-align:center;" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+                            <input class="check_Comp_@Model.competenceAnalyse.Id" type="radio" @if ((Model.competenceAnalyse.NiveauTaxonomique ?? -1) == NiveauTaxonomique.Id) { @Checked } onclick="alert(!$(event.target).attr('checked'));if (!$(event.target).attr('checked')) { $(event.target.parentElement).submit(); $('.check_Comp_@Model.competenceAnalyse.Id').prop('checked', false); $('.check_Comp_@Model.competenceAnalyse.Id').removeAttr('checked'); $(event.target).prop('checked', true); }" value="@NiveauTaxonomique.Id" name="idNiveauTaxonomique" />
+                            <input type="hidden" value="@Model.competenceAnalyse.Id" name="id" />
+                            <input type="hidden" value="true" name="isCompetence" />
+                        </form>
+                    </td>
+                }
+            </tr>
+            <tr><td colspan="@i" style="background-color:white; color:black;"><hr style="border:0; border-bottom: 3px solid #a5a5a5; margin:0;" /></td></tr>
+            @if (Model.elementAnalyses.Count != 0)
+            {
+                @foreach (var ElementAnalyse in Model.elementAnalyses)
+                {
+                    <tr>
+                        <th style="padding: 0 0 0 7px!important; width: 19px;">
+                            <span style="padding:0 5px; font-size:12px; float:left;" class="btn btn-warning btn-dark" data-html="true" data-toggle="popover" data-content="
+                                    @Html.Raw(ElementAnalyse.ElementNavigation.CriterePerformance)
+                                    " data-placement="bottom" data-trigger="hover">?</span>
+                        </th>
+                        <td>
+                            <span>
+                                @ElementAnalyse.ElementNavigation.Enonce
+                            </span>
+                        </td>
+                        @foreach (var NiveauTaxonomique in Model.modeleTaxonomique.NiveauTaxonomique.ToList())
+                        {
+                            <td>
+                                <form asp-controller="Competence" asp-action="Analyse_Taxonomie" style="text-align:center;" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+                                    <input class="check_Ele_@ElementAnalyse.Id" type="radio" value="@NiveauTaxonomique.Id" @if ((ElementAnalyse.NiveauTaxonomique ?? -1) == NiveauTaxonomique.Id) { @Checked } onclick="if (!$(event.target).attr('checked')) { $(event.target.parentElement).submit(); $('.check_Ele_@ElementAnalyse.Id').prop('checked', false); $('.check_Ele_@ElementAnalyse.Id').removeAttr('checked'); $(event.target).prop('checked', true); }" name="idNiveauTaxonomique" />
+                                    <input type="hidden" value="@ElementAnalyse.Id" name="id" />
+                                    <input type="hidden" value="false" name="isCompetence" />
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="@i">
+                        <br />
+                        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun élément pour cette compétence...</p>
+                        <br />
+                    </td>
+                </tr>
+            }
+        </tbody>          
+    </table>
+}
+    <script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+    </script>

@@ -1,0 +1,21 @@
+﻿@model ChangerMDPViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Change le mod de passe d'un utilisateur</h4>
+</div>
+<div class="modal-body">
+    <form asp-controller="Admin" asp-action="Utilisateur_ChangerMDP" data-ajax="true" data-ajax-method="POST" data-ajax-success="alert('ok');" data-ajax-failure="" style="margin-bottom:45px;">
+        <div class="form-group">
+            <label asp-for="Hash" class="control-label"></label>
+            <input type="password" id="Password" class="form-control" style="width:100%" required />
+        </div>
+        <input type="hidden" id="Salt" value="@Model.Salt"/>
+        <input type="hidden" asp-for="Courriel"/>
+        <input type="hidden" asp-for="Hash"/>
+        <div class="form-group">
+            
+            <input type="submit" onclick="event.preventDefault();$('#Hash').val(SHA256($('#Password').val() + $('#Salt').val())); event.target.parentElement.parentElement.submit();" value="Changer le mot de passe" style="float:right;" class="btn btn-primary" />
+        </div>
+    </form>
+</div>

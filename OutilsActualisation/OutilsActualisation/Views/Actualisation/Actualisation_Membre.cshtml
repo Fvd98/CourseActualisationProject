@@ -1,0 +1,113 @@
+﻿@model Actualisation_MembreViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h2 style="margin-left:5%;">Liste des responsables<span style="float:right; margin-right: calc(5% + 3px);" class="btn btn-success" onclick="AjaxFill('/Actualisation/Actualisation_Membre_Ajouter?Role=R', '#ModalContainer', false);">Ajouter un responsable</span></h2>
+    <p style="margin-left:5%;">Ceux-ci peuvent consulter, commenter et modifier l'actualisation.</p>
+
+    @if (Model.Responsables.Count() == 0)
+    {
+        <br />
+        <br />
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun responsable...</p>
+        <br />
+    }
+    else
+    {
+        <table class="tableD">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Responsables.First().Utilisateur)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Responsables.First().UtilisateurNavigation.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Responsables.First().UtilisateurNavigation.Titre)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var responsable in Model.Responsables)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => responsable.Utilisateur)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => responsable.UtilisateurNavigation.Prenom) @Html.DisplayFor(modelItem => responsable.UtilisateurNavigation.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => responsable.UtilisateurNavigation.Titre)
+                        </td>
+                        <td style="padding-left:0; padding-right:0; width: 100px;">
+                            <a class="btn btn-danger" data-ajax-url="/Actualisation/Actualisation_Membre_Retirer?id=@responsable.Utilisateur" data-ajax="true" data-ajax-method="POST" data-ajax-success="location.reload();" data-ajax-failure="Alert('error', xhr.responseText)"><span style="margin-right:7px;" class="glyphicon glyphicon-remove"></span>Retirer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+    }
+
+    <h2 style="margin-left:5%;">Liste des membres<span style="float:right; margin-right: calc(5% + 3px);" class="btn btn-success" onclick="AjaxFill('/Actualisation/Actualisation_Membre_Ajouter?Role=M', '#ModalContainer', false);">Ajouter un membre</span></h2>
+    <p style="margin-left:5%;">Ceux-ci peuvent consulter et commenter l'actualisation.</p>
+
+    @if (Model.Membres.Count() == 0)
+    {
+        <br />
+        <br />
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun membre...</p>
+        <br />
+    }
+    else
+    {
+        <table class="tableD">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Membres.First().Utilisateur)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Membres.First().UtilisateurNavigation.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Membres.First().UtilisateurNavigation.Titre)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var membre in Model.Membres)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => membre.Utilisateur)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => membre.UtilisateurNavigation.Prenom) @Html.DisplayFor(modelItem => membre.UtilisateurNavigation.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => membre.UtilisateurNavigation.Titre)
+                        </td>
+                        <td style="padding-left:0; padding-right:0; width: 100px;">
+                            <a class="btn btn-danger" data-ajax-url="/Actualisation/Actualisation_Membre_Retirer?id=@membre.Utilisateur" data-ajax="true" data-ajax-method="POST" data-ajax-success="location.reload();" data-ajax-failure="Alert('error', xhr.responseText)"><span style="margin-right:7px;" class="glyphicon glyphicon-remove"></span>Retirer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+    }
+
+
+
+
+
+
+
+
+

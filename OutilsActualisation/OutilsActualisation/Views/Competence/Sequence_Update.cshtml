@@ -1,0 +1,19 @@
+﻿@model OutilsActualisation.AppData.SequenceCompetence
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Modifier la séquence de compétences @Model.Nom</h4>
+</div>
+<div class="modal-body">
+    <form asp-controller="Competence" asp-action="Sequence_Update" data-ajax="true" data-ajax-method="POST" data-ajax-success="if(xhr.responseText.includes('<div')) { $('#ModalContainer').html(xhr.responseText); } else { AjaxFill('/Competence/Sequence', '#menu', false); CloseModal(); Alert('success',xhr.responseText); }" data-ajax-failure="Alert('error', xhr.responseText)" style="margin-bottom:45px;">
+        <div class="form-group">
+            <label asp-for="Nom" class="control-label"></label>
+            <input type="text" asp-for="Nom" class="form-control" style="width:100%" />
+            <span asp-validation-for="Nom" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="Id"/>
+        <div class="form-group">
+            <input type="submit" value="Modifier" style="float:right;" class="btn btn-warning" />
+        </div>
+    </form>
+</div>

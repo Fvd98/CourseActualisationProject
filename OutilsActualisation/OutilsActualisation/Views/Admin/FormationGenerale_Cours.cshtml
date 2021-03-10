@@ -1,0 +1,52 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.Cours>
+@{
+    int Increment = 0;
+}
+
+<h3 style="margin-top:10px;">Liste des cours de la formation générale<span style="float:right;" class="btn btn-success" onclick="AjaxFill('/Admin/FormationGenerale_Cours_Create', '#ModalContainer', false);">Créer un cours</span></h3>
+<br />
+
+@if (Model.Count() != 0)
+{
+    @foreach (var Cours in Model)
+    {
+        <span class="btn btn-dark btn-success" style="width:100%; padding:6px;" data-toggle="collapse" data-target="#collapse_@Increment" aria-controls="collapse_@Increment">
+            <span class="badge badge-light" style="color:black; border-radius:3px; float:left; vertical-align:central;margin-top:2px; margin-right:6px;">@Cours.Sigle</span>
+            @Cours.Titre
+            <a title="Supprimer le cours" data-ajax-url="/Admin/FormationGenerale_Cours_Delete?id=@Cours.Id" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Admin/FormationGenerale_Cours', '#menu', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; float:right;" class="btn btn-danger glyphicon glyphicon-trash"></a>
+            <span title="Modifier le cours" onclick="AjaxFill('/Admin/FormationGenerale_Cours_Update?id=@Cours.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-warning glyphicon glyphicon-pencil"></span>
+            <span title="Modifier les compétences pour le cours" onclick="AjaxFill('/Admin/FormationGenerale_Cours_Competence?id=@Cours.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-primary glyphicon glyphicon-list"></span>
+        </span>
+        <div class="collapse" id="collapse_@Increment">
+            <div style="background-color:rgba(200, 200, 200, 0.54); margin:2px; margin-top:0; padding: 10px; border-radius: 0 0 4px 4px;">
+                @if (Cours.CoursCompetence.Count() != 0)
+                {
+                    @foreach (var CoursCompetence in Cours.CoursCompetence)
+                    {
+                        <div style="display:flex">
+                            <span class="badge badge-light" style="height:18px;background-color:#343a40;color:white; border-radius:3px; float:left; vertical-align:central;margin-top:2px; margin-right:6px;">@CoursCompetence.CompetenceNavigation.Code</span>
+                            <label style="text-align:left; flex-grow: 1;">
+                                @CoursCompetence.CompetenceNavigation.Enonce
+                                <a data-ajax-url="/Admin/FormationGenerale_Cours_Competence?idCompetence=@CoursCompetence.Competence&idCours=@CoursCompetence.Cours&Ajouter=false" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Admin/FormationGenerale_Cours', '#menu', false);" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; float:right;" class="btn btn-danger glyphicon glyphicon-remove"></a>
+                            </label>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <br />
+                    <p style="font-weight:bold; font-size:20px; text-align:center;">Aucune compétence pour ce cours...</p>
+                    <br />
+                }    
+            </div>
+        </div>
+        <div style="width:100%; height:7px;"></div>
+        Increment++;
+    }
+}
+else
+{
+    <br />
+    <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun cours pour cette formation générale...</p>
+    <br />
+}

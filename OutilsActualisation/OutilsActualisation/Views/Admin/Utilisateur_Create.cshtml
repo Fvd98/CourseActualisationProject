@@ -1,0 +1,45 @@
+﻿@model OutilsActualisation.AppData.Utilisateur
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Ajouter un utilisateur</h4>
+</div>
+<div class="modal-body">
+    <form asp-controller="Admin" asp-action="Utilisateur_Create" data-ajax="true" data-ajax-method="POST" data-ajax-success="if(xhr.responseText.includes('<div')) { $('#ModalContainer').html(xhr.responseText); } else { location.reload(); }" data-ajax-failure="Alert('error', xhr.responseText)" style="margin-bottom:45px;">
+        <div class="form-group">
+            <label asp-for="Courriel" class="control-label"></label>
+            <input type="text" asp-for="Courriel" class="form-control" style="width:100%" />
+            <span asp-validation-for="Courriel" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Prenom" class="control-label"></label>
+            <input type="text" asp-for="Prenom" class="form-control" style="width:100%" />
+            <span asp-validation-for="Prenom" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Nom" class="control-label"></label>
+            <input type="text" asp-for="Nom" class="form-control" style="width:100%" />
+            <span asp-validation-for="Nom" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Titre" class="control-label"></label>
+            <input type="text" asp-for="Titre" class="form-control" style="width:100%" />
+            <span asp-validation-for="Titre" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IsAdmin" class="control-label"></label><br />
+            <span style="width:30px; display:inline-block;">Oui</span><input style="margin-left:7px;" type="radio" name="IsAdmin" value="true" /><br />
+            <span style="width:30px; display:inline-block;">Non</span><input style="margin-left:7px;" type="radio" checked name="IsAdmin" value="false" />
+            <span asp-validation-for="IsAdmin" class="text-danger"></span>
+        </div>
+        <div id="GroupMotDePasse" class="form-group" style="display:none;">
+            <label asp-for="MotDePasse" class="control-label"></label><small style="margin-left:3.5px;" class="text-danger">*Obligatoire</small>
+            <input type="password" asp-for="MotDePasse" class="form-control" style="width:100%" />
+            <span asp-validation-for="MotDePasse" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Ajouter" style="float:right;" class="btn btn-success" />
+        </div>
+    </form>
+</div>
+

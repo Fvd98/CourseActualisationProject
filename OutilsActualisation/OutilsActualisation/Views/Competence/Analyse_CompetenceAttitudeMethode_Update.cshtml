@@ -1,0 +1,58 @@
+﻿@model CheckListViewModel<OutilsActualisation.AppData.AttitudeMethode, OutilsActualisation.AppData.CompetenceAnalyse>
+@{
+    string Checked = "checked";
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Sélectionnez les @ViewBag.Type pour la compétence <strong>@Model.Parent.Competence</strong></h4>
+</div>
+
+<button style="margin:10px;" class="btn btn-success" onclick="AjaxFill('/Competence/Analyse_AttitudeMethode_Create?AM=@Html.Raw(ViewBag.Type == "attitudes" ? "A" : "M")&idCA=@Model.Parent.Id', '#ModalContainer', false);">Ajouter une @Html.Raw(ViewBag.Type.Remove(ViewBag.Type.Length - 1))</button>
+
+<div class="modal-body">
+    @if (Model.Items.Count() != 0)
+    {
+        <table class="ombre">
+            <thead>
+                <tr style="background-color:#343a40; color:white;">
+                    <th>
+                        @Html.Raw(ViewBag.Type.ToCharArray()[0].ToString().ToUpper() + ViewBag.Type.Substring(1))
+                    </th>
+                    <th style="text-align: center!important;">
+                        Sélectionnée
+                    </th>
+                    <th style="text-align: center!important; width: 58px;">
+                        <span class="glyphicon glyphicon-cog" ></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var AM in Model.Items.OrderBy(I => I.Item.Categorie))
+                {
+                    <tr>
+                        <td style="text-align:left!important;">
+                            @AM.Item.Categorie - @AM.Item.Enonce
+                        </td>
+                        <td style="text-align: center!important;">
+                            <a data-ajax-url="/Competence/Analyse_CompetenceAttitudeMethode_Update?idAM=@AM.Item.Id&idCA=@Model.Parent.Id&Ajouter=@(!AM.Checked)" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/Analyse_CompetenceAttitudeMethode_Update?id=@Model.Parent.Id&type=@Html.Raw(ViewBag.Type == "attitudes" ? "A" : "M")', '#ModalContainer', false);AjaxFill('/Competence/Analyse_CompetenceAttitudeMethode?id=@Model.Parent.Id', '#menu_@Model.Parent.Id', false);" data-ajax-failure="Alert('error', xhr.responseText)">
+                                <input onclick="this.disabled=true;this.style.cursor = 'progress'" style="height:20px; width:20px;" type="checkbox" @if (AM.Checked) { @Checked } />
+                            </a>
+                        </td>
+                        <td>
+                            <a title="supprimer @Html.Raw(ViewBag.Type == "attitudes" ? "l'attitude" : "la méthode")" data-ajax-url="/Competence/Analyse_AttitudeMethode_Delete?id=@AM.Item.Id" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/Analyse_CompetenceAttitudeMethode_Update?id=@Model.Parent.Id&type=@AM.Item.Am', '#ModalContainer', false);" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; margin-top: 1px;" class="btn btn-danger glyphicon glyphicon-trash"></a>
+                            <a title="modifier @Html.Raw(ViewBag.Type == "attitudes" ? "l'attitude" : "la méthode")" onclick="AjaxFill('/Competence/Analyse_AttitudeMethode_Update?id=@AM.Item.Id&idCA=@Model.Parent.Id', '#ModalContainer', false);" style="float:right; font-size:10px; padding:2px 5px; margin-top: 1px; margin-right:3.5px;" class="btn btn-warning glyphicon glyphicon-pencil"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucune @Html.Raw(ViewBag.Type.Remove(ViewBag.Type.Length - 1)) pour cette actualisation...</p>
+    }
+</div>
+
+
+

@@ -1,0 +1,19 @@
+﻿@model SelectList
+
+<div style="float:right;">
+    <div style="float:right">
+        <form asp-controller="Competence" asp-action="RepartitionHeure_Instance_Delete" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error', xhr.responseText)" data-ajax-success="Alert('success', xhr.responseText); AjaxFill('/Competence/RepartitionHeure_Instances?id=@ViewBag.Profil', '#menu', false);">
+            <select name="id" class="btn btn-default" style="display:inline-block; border-right:0; height:30px; border-radius: 4px 0 0 4px; margin-left:4px; width:250px;" id="select_instance" asp-items="Model" onchange="AjaxFill('/Competence/RepartitionHeure_Instance?id=' + $('#select_instance').val(), '#inner_menu', false);"></select><a data-ajax-url="/Competence/RepartitionHeure_Instance_Create?id=@ViewBag.Profil" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Competence/RepartitionHeure_Instances?id=@ViewBag.Profil', '#menu', false); Alert('success', xhr.responseText);" data-ajax-failure="Alert('error', xhr.responseText)" class="btn btn-success" style="display:inline-block; height:30px; line-height: 30px; padding: 0 6px 0px 7px; border-left:0; border-radius:0"><span class="glyphicon glyphicon-plus"></span></a><span onclick="$(event.target.parentElement).submit();" class="btn btn-danger" style="display:inline-block; height:30px; line-height: 30px; padding: 0 6px 0px 7px; border-left:0; border-radius:0 4px 4px 0"><span class="glyphicon glyphicon-remove"></span></span>
+        </form>
+        </div>
+    <div style="float:right; line-height: 30px;">Selectionnez une instance pour la consulter : </div>
+</div>
+<br /> <br />
+<div id="inner_menu">
+
+</div>
+
+<script>
+    AjaxFill('/Competence/RepartitionHeure_Instance?id=' + $('#select_instance').val(), '#inner_menu', false);
+</script>
+

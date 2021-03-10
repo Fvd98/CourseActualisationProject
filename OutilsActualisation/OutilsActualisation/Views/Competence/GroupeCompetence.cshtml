@@ -1,0 +1,47 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.ProfilFormation>
+
+<style>
+    .active {
+        border-bottom: 0 !important;
+    }
+</style>
+
+<!--Content-->
+<div style="height: calc(100vh - (1vh + 11.25vw + 111px));max-height: calc(100vh - (5vh + 11.25vw)); overflow-y:auto;">
+    <h2 style="margin-top:0px;">Formation de groupe de compétences</h2>
+    <p>
+        Cette étape sert à former des groupes de compétences qui serviront à générer des cours pour le futur programme.
+    </p>
+
+    @if (Model.Count() != 0)
+    {
+        <ul id="profils" class="nav nav-tabs" style="display:flex; border-bottom:0!important;">
+            @foreach (var Profil in Model)
+            {
+                <li style="flex-grow:1; border-bottom: 1px solid #c5c5c5; text-align:center; cursor:pointer; font-weight:bold;" onclick="AjaxFill('/Competence/GroupeCompetence_Profil?id=@Profil.Id', '#menu', false);"><a data-toggle="tab" style="margin-right:0;color:black; border-bottom:0;">@Profil.Nom</a></li>
+            }
+        </ul>
+
+        <div class="tab-content" style="background-color:white; border:1px solid #ddd; border-top:0; padding:15px; word-break:break-word;">
+            <div id="menu" class="tab-pane fade in active" style="">
+
+            </div>
+        </div>
+
+        <script>
+            $('#profils li:first-child').addClass('active');
+                AjaxFill('/Competence/GroupeCompetence_Profil?id=@Model.First().Id', '#menu', false);
+        </script>
+    }
+    else
+    {
+        <br />
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun profil de formation pour cette actualisation...</p>
+        <br />
+    }
+</div>
+
+
+
+
+

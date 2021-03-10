@@ -1,0 +1,90 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.CompetenceAnalyse>
+@{
+    int Increment = 0;
+    string IsObl = "Obl.";
+    string IsOpt = "Opt.";
+}
+
+<!--Content-->
+<div style="height: calc(100vh - (1vh + 11.25vw + 111px));max-height: calc(100vh - (5vh + 11.25vw)); overflow-y:auto;">
+    <h2 style="margin-top:0px;">Entrée des compétences<span style="float:right;" class="btn btn-success" onclick="AjaxFill('/Devis/Competence_Create', '#ModalContainer', false);">Ajouter une compétence</span></h2>
+    <p>
+        Cette étape sert à entrer les compétences, leur contexte de réalisation, leurs éléments de compétences et leurs contextes de réalisation afin de pouvoir les réutiliser plus tard dans le processus d'actualisation.
+    </p>
+
+    @if (Model.Count() != 0)
+    {
+        @* COLLAPSIBLE POUR CHAQUE COMPÉTENCE *@
+        @foreach (var CompetenceAnalyse in Model.ToList())
+        {
+        <span class="btn btn-dark btn-success" style="width:100%; padding:6px;" type="button" data-toggle="collapse" data-target="#collapse_@Increment" aria-controls="collapse_@Increment">
+            <span style="width:100px; float:left; text-align:left;">
+                <span class="badge badge-light" style="color:black; border-radius:3px; vertical-align:central;margin-top:2px; font-weight:bold;">
+                    @if (CompetenceAnalyse.CompetenceNavigation.IsObligatoire ?? true)
+                    {@IsObl}
+                else
+                {@IsOpt}
+                </span>
+                <span class="badge badge-light" style="width:45px; color:black; border-radius:3px; vertical-align:central;margin-top:2px;">@CompetenceAnalyse.CompetenceNavigation.Code</span>
+            </span>
+            
+            <span style="font-weight:bold; width: calc(100% - 186px); overflow:hidden; display:inline-block; float: left; font-size:1.05em;">@CompetenceAnalyse.CompetenceNavigation.Enonce</span>
+            <a title="Supprimer la compétence" data-ajax-url="/Devis/Competence_Delete?id=@CompetenceAnalyse.CompetenceNavigation.Code" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Devis/Competence', '#ContentContainer', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; float:right;" class="btn btn-danger glyphicon glyphicon-trash"></a>
+            <span title="Modifier la compétence" onclick="AjaxFill('/Devis/Competence_Update?id=@CompetenceAnalyse.CompetenceNavigation.Code', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-warning glyphicon glyphicon-pencil"></span>
+            <span title="Ajouter un élément" onclick="AjaxFill('/Devis/ElementCompetence_Create?id=@CompetenceAnalyse.CompetenceNavigation.Code', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; float:right; margin-right:6px;" class="btn btn-primary glyphicon glyphicon-plus"></span>
+        </span>
+
+        <div class="collapse" id="collapse_@Increment">
+            <div style="background-color:rgba(255, 255, 255, 0.54); margin:0 2px 2px 2px; padding: 0 15px 15px 15px;  border-radius: 0 0 4px 4px;">
+                <div style="background-color: white;padding: 8px;border-radius: 0 0 4px 4px;margin-bottom: 15px;border: 0.5px solid #343a40;border-top: 0;">
+                    <strong>Contextes de réalisation :<br /></strong> @Html.Raw(CompetenceAnalyse.CompetenceNavigation.ContextesRealisation)
+                </div>
+                <div class="container" style="width:inherit; padding:0px;">
+                    @if (CompetenceAnalyse.CompetenceNavigation.Element.Count() != 0)
+                    {
+                        <table class="ombre">
+                            @* RANGÉE POUR CHAQUE ÉLÉMENT DE LA COMPÉTENCE *@
+                            @foreach (var Element in CompetenceAnalyse.CompetenceNavigation.Element.ToList())
+                            {
+                                <tr>
+                                    <td>
+                                        <span style="padding:0 5px; font-size:12px; float:left; margin:3px 6px 2px 0;" class="btn btn-warning btn-dark" data-html="true" data-toggle="popover" data-content="
+                                    @Html.Raw(Element.CriterePerformance)
+                                    " data-placement="bottom" data-trigger="hover">?</span>
+                                        <span>
+                                            @Element.Enonce
+                                        </span>
+                                        <a title="Supprimer l'élément" data-ajax-url="/Devis/ElementCompetence_Delete?id=@Element.Id" data-ajax="true" data-ajax-method="POST" data-ajax-success="AjaxFill('/Devis/Competence', '#ContentContainer', false)" data-ajax-failure="Alert('error', xhr.responseText)" style="float:right; font-size:10px; padding:2px 5px; margin-top: 1px;" class="btn btn-danger glyphicon glyphicon-trash"></a>
+                                        <span title="Modifier l'élément" onclick="AjaxFill('/Devis/ElementCompetence_Update?id=@Element.Id', '#ModalContainer', false);event.stopPropagation();" style="float:right; font-size:10px; padding:2px 5px; margin-top: 1px; margin-right:6px;" class="btn btn-warning glyphicon glyphicon-pencil"></span>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <br />
+                        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun élément pour cette compétence...</p>
+                        <br />
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div style="height:7px;"></div>
+            Increment++;
+        }       
+    }
+    else
+    {
+        <br />
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucune compétence pour cette actualisation...</p>
+        <br />
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+</script>

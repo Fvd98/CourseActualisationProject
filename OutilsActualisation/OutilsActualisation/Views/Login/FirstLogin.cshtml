@@ -1,0 +1,23 @@
+﻿@model FirstLoginViewModel
+
+<div style="text-align:center">
+    <h2>Première connexion</h2>
+    <h4>Veuillez choisir un mot de passe</h4>
+</div>
+<hr />
+<form method="Post" style="max-width:45%; margin:auto; margin-top:5%;" action="/Login/FirstLogin?ReturnUrl=@ViewData["ReturnUrl"]">
+    <div class="form-group">
+        <label asp-for="NewPassword" class="control-label"></label>
+        <input id="Password" type="password" class="form-control" />
+        <input type="hidden" asp-for="NewPassword" />
+        <span asp-validation-for="NewPassword" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Confirmer le mot de passe</label>
+        <input id="Password_conf" type="password" class="form-control" />
+        <span id="invalid-NewPassword_conf" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button onclick="event.preventDefault(); if ($('#Password').val() == $('#Password_conf').val()) { $('#NewPassword').val(SHA256($('#Password').val() + '@Model.Salt')); event.target.parentElement.parentElement.submit(); } else { Alert('error', 'Oups! une erreur s\'est produite...'); }" class="btn btn-block btn-dark btn-success">Confirmer</button>
+    </div>
+</form>

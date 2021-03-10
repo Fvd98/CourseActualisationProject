@@ -1,0 +1,82 @@
+﻿@model OutilsActualisation.Models.GabaritComparaisonViewModel
+
+@{ 
+
+
+}
+<!--Content-->
+<div style="height: calc(100vh - (1vh + 11.25vw + 111px));max-height: calc(100vh - (5vh + 11.25vw)); overflow-y:auto; word-break:break-word;">
+    <h2 style="margin-top:0px;">Heures et unités</h2>
+    <p>
+        Cette étape sert à entrer les informations sur les heures et les unités des différentes sections du devis actuel et du nouveau devis afin de pouvoir les comparer.
+    </p>
+
+    <table class="tableD">
+        <thead>
+            <tr>
+                <th colspan="2" class="tg-vbic"></th>
+                <th class="tg-vbic">
+                    @Html.DisplayNameFor(model => model.ancienDevis)
+                </th>
+                <th class="tg-vbic">
+                    @Html.DisplayNameFor(model => model.nouveauDevis)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.nouveauDevis.PointGabarit.Count; i++)
+            {
+                @* SI LE POINT N'A PAS D'ENFANT, C'EST UNE RANGÉE NORMALE À REMPLIR (une rangée et trois colonnes) *@
+                if (Model.nouveauDevis.PointGabarit.ElementAt(i).InverseParentPointGabaritNavigation.Count == 0)
+                {
+                    <tr>
+                        <td colspan="2">@Model.nouveauDevis.PointGabarit.ElementAt(i).Enonce</td>
+                        <td>
+                            <form asp-controller="Devis" asp-action="Point_Update" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error', xhr.responseText);">
+                                <input asp-for="ancienDevis.PointGabarit.ElementAt(i).Id" type="hidden" />
+                                <input asp-for="ancienDevis.PointGabarit.ElementAt(i).Contenu" type="text" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { if (/^(\d+(.\d+)*)*$/g.test($(event.target).val())) { $(event.target.parentElement).submit(); } else { $(event.target).val(Window.OldValue); Alert('error', 'L\'enregistrement a échoué: les données doivent être des nombres.') } }" class="form-control" />
+                            </form>
+                        </td>
+                        <td>
+                            <form asp-controller="Devis" asp-action="Point_Update" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error', xhr.responseText)">
+                                <input asp-for="nouveauDevis.PointGabarit.ElementAt(i).Id" type="hidden" />
+                                <input asp-for="nouveauDevis.PointGabarit.ElementAt(i).Contenu" type="text" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { if (/^(\d+(.\d+)*)*$/g.test($(event.target).val())) { $(event.target.parentElement).submit(); } else { $(event.target).val(Window.OldValue); Alert('error', 'L\'enregistrement a échoué: les données doivent être des nombres.') } }" class="form-control" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @* SI LE POINT A DES ENFANTS, C'EST DES RANGÉES À REMPLIR (plusieurs rangées et trois colonnes) *@
+                else
+                {
+                    bool First = true;
+
+                    @for (int j = 0; j < Model.nouveauDevis.PointGabarit.ElementAt(i).InverseParentPointGabaritNavigation.Count; j++)
+                    {
+                        <tr>
+                            @if (First)
+                            {
+                                First = false;
+                                <td rowspan="@Model.nouveauDevis.PointGabarit.ElementAt(i).InverseParentPointGabaritNavigation.Count">@Model.nouveauDevis.PointGabarit.ElementAt(i).Enonce</td>
+                            }
+                            <td>
+                                @Model.nouveauDevis.PointGabarit.ElementAt(i).InverseParentPointGabaritNavigation.ElementAt(j).Enonce
+                            </td>
+                            <td>
+                                <form asp-controller="Devis" asp-action="Point_Update" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+                                    <input asp-for="@Model.ancienDevis.PointGabarit.ElementAt(i).InverseParentPointGabaritNavigation.ElementAt(j).Id" name="Id" type="hidden" />
+                                    <input asp-for="@Model.ancienDevis.PointGabarit.ElementAt(i).InverseParentPointGabaritNavigation.ElementAt(j).Contenu" type="text" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { if (/^(\d+(.\d+)*)*$/g.test($(event.target).val())) { $(event.target.parentElement).submit(); } else { $(event.target).val(Window.OldValue); Alert('error', 'L\'enregistrement a échoué: les données doivent être des nombres.') } }" class="form-control" />
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-controller="Devis" asp-action="Point_Update" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+                                    <input asp-for="@Model.nouveauDevis.PointGabarit.ElementAt(i).InverseParentPointGabaritNavigation.ElementAt(j).Id" name="Id" type="hidden" />
+                                    <input asp-for="@Model.nouveauDevis.PointGabarit.ElementAt(i).InverseParentPointGabaritNavigation.ElementAt(j).Contenu" type="text" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { if (/^(\d+(.\d+)*)*$/g.test($(event.target).val())) { $(event.target.parentElement).submit(); } else { $(event.target).val(Window.OldValue); Alert('error', 'L\'enregistrement a échoué: les données doivent être des nombres.') } }" class="form-control" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>

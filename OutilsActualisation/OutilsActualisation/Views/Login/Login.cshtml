@@ -1,0 +1,40 @@
+﻿@model OutilsActualisation.Models.LoginViewModel
+
+<div style="text-align:center">
+    <h2>Se connecter</h2>
+    <h4>Veuillez entrer vos informations de connexion</h4>
+</div>
+<hr />
+<form method="Post" style="max-width:45%; margin:auto; margin-top:5%;" action="/Login/Login?ReturnUrl=@ViewData["ReturnUrl"]">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Courriel" class="control-label"></label>
+        <input asp-for="Courriel" class="form-control" value="@{ if (ViewBag.CourrielActua != null) { @ViewBag.CourrielActua } }" />
+        <span asp-validation-for="Courriel" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MotDePasse" class="control-label"></label>
+        <input id="Password" type="password" class="form-control"/>
+        <input type="hidden" asp-for="MotDePasse"/>
+        <span asp-validation-for="MotDePasse" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                @{ if (ViewBag.RememberMeActua != null && Convert.ToBoolean(ViewBag.RememberMeActua))
+                    {
+                        <input asp-for="RememberMe" checked />
+                    }
+                    else
+                    {
+                        <input asp-for="RememberMe" />
+                    }
+                }
+                Se souvenir de moi?
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button onclick="event.preventDefault(); Ajax('/Login/PreLogin?Courriel=' + $('#Courriel').val(), function (data, status) { $('#MotDePasse').val(SHA256($('#Password').val() + data)); event.target.parentElement.parentElement.submit(); }, function (data, status, error) { Alert('error', 'Oups! une erreur s\'est produite...'); });" class="btn btn-block btn-dark btn-success">Connexion</button>
+    </div>
+</form>

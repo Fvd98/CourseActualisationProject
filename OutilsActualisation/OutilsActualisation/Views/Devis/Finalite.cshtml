@@ -1,0 +1,39 @@
+﻿@model OutilsActualisation.Models.GabaritComparaisonViewModel
+
+<!--Content-->
+<div style="height: calc(100vh - (1vh + 11.25vw + 111px));max-height: calc(100vh - (5vh + 11.25vw)); overflow-y:auto;">
+
+    <h2 style="margin-top:0px;">Finalités des programmes</h2>
+    <p>
+        Cette étape sert à prendre en note les finalités de l'ancien devis et du nouveau devis afin de les comparer et de soulever leurs différences et leurs ressemblances.
+    </p>
+
+   
+    <table class="tableD">
+        <tr>
+            <th style="width:25%;"></th>
+            <th>@Html.DisplayNameFor(model => model.ancienDevis)</th>
+            <th>@Html.DisplayNameFor(model => model.nouveauDevis)</th>
+        </tr>
+        @for (int i = 0; i < Model.nouveauDevis.PointGabarit.Count; i++)
+        {
+        
+            <tr>
+                <td>@Html.DisplayFor(model => model.nouveauDevis.PointGabarit.ElementAt(i).Enonce)</td>
+                <td>
+                    <form asp-controller="Devis" asp-action="Point_Update" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+                        <input asp-for="ancienDevis.PointGabarit.ElementAt(i).Id" type="hidden" />
+                        <textarea type="text" asp-for="ancienDevis.PointGabarit.ElementAt(i).Contenu" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { $(event.target.parentElement).submit(); }" class="form-control" onkeyup="TextAreaAdjust(this)"></textarea>
+                    </form>
+                </td>
+                <td>
+                    <form asp-controller="Devis" asp-action="Point_Update" data-ajax="true" data-ajax-method="POST" data-ajax-failure="Alert('error','L\'enregistrement a échoué.')">
+                        <input asp-for="nouveauDevis.PointGabarit.ElementAt(i).Id" type="hidden" />
+                        <textarea type="text" asp-for="nouveauDevis.PointGabarit.ElementAt(i).Contenu" onfocus="Window.OldValue = $(event.target).val();" onblur="if (Window.OldValue != $(event.target).val()) { $(event.target.parentElement).submit(); }" class="form-control" onkeyup="TextAreaAdjust(this)"></textarea>
+                    </form>
+                </td>
+            </tr>
+        
+         }
+    </table>
+</div>

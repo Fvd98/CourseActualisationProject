@@ -1,0 +1,295 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .btn-dark {
+            background-color: #343a40 !important;
+            border-color: #343a40 !important;
+        }
+
+            .btn-dark:hover {
+                background-color: #202427 !important;
+            }
+
+        .tableD {
+            width: 90%!important;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.25)!important;
+        }
+
+        .tableD tr td {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 10px 5px !important;
+            overflow: hidden;
+            word-break: normal;
+            line-height: 24px !important;
+            text-align: center !important;
+        }
+
+        .tableD tr th {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 10px 5px !important;
+            overflow: hidden;
+            word-break: normal;
+            background-color: #343a40;
+            color: #fff;
+            font-weight: bold;
+            border-color: #9b9b9b !important;
+            text-align: center !important;
+            vertical-align: top !important;
+        }
+
+            .tableD, .tableD tr th, .tableD tr td {
+                border: 1px solid #9b9b9b;
+            }
+
+        .ombre {
+            width: 100% !important;
+        }
+
+        .ombre, .ombre tr td, .ombre tr th {
+            text-align: left;
+            border: none !important;
+            text-align:left !important;
+            padding: 2px 5px!important;
+        }
+
+            .ombre tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+
+            .ombre tr:nth-child(odd) {
+                background-color: white;
+            }
+
+        .popover {
+            max-width: 75%;
+        }
+    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OutilsActualisation</title>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/needim/noty/77268c46/lib/noty.css" />
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body style="background-image: url('/images/Design_Black.png'); background-size:17.3vh 10vh; background-position-x:7vw; overflow-x:hidden;background-attachment: fixed; padding:0;">
+    <div style="background-image:linear-gradient(rgba(0,0,0,0),rgba(255,128,0,0.8)); padding:0 2.5vw;">
+        <nav class="navbar navbar-inverse navbar-static-top" style="margin-bottom:0;">
+            <div class="container" style="width:auto;">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a asp-controller="@if (!User.Identity.IsAuthenticated) { string Public = "Public";@Public}else{string Actualisation="Actualisation";@Actualisation}" asp-action="Accueil" class="navbar-brand"><span class="glyphicon glyphicon-home" style="margin-right:7px;"></span>OutilsActualisation</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a asp-controller="" asp-action="">Programmes</a></li>
+                        @if (Context.Request.Path.Value == "/Actualisation/Actualisation" && User.Claims.FirstOrDefault(C => C.Type == "RoleActu").Value == "R")
+                        {
+                            <li><a asp-controller="Actualisation" asp-action="Actualisation_Membre" asp-route-FromActu="true">Gérer Projet</a></li>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Administation
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-controller="Admin" asp-action="FormationGenerale_Liste">Formations générales</a></li>
+                                    <li><a asp-controller="Admin" asp-action="Taxonomie">Taxonomies</a></li>
+                                    <li><a asp-controller="Admin" asp-action="Gabarit">Gabarits</a></li>
+                                    <li><a asp-controller="Admin" asp-action="Utilisateur">Utilisateurs</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    @await Html.PartialAsync("_LoginPartial")
+                </div>
+            </div>
+        </nav>
+
+        <partial name="_CookieConsentPartial" />
+
+        <div id="MainContentContainer" class="container body-content" style="width:100%;min-height: calc(100vh - 51px);background-image: linear-gradient(rgba(255,255,255,0.8),rgba(255,255,255,0.5));border: 1.1px solid grey; border-top:0;border-bottom:0; position:relative;padding-bottom:60px;">
+            @RenderBody()
+
+            <footer style="bottom:0; position:absolute; width: calc(100% - 30px);">
+                <hr style="margin-top:5px;" />
+                <p style="float:left">&copy; 2018 - OutilsActualisation</p>
+            </footer>
+            <div style="position:absolute;bottom:5px; right:15px; background-image: url('/images/Logo.png'); width:162.04px; height:35px; background-size: 162.04px 35px;"></div>
+        </div>
+        <environment include="Development">
+            <script src="~/lib/jquery/dist/jquery.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        </environment>
+        <environment exclude="Development">
+            <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.js"
+                    asp-fallback-src="~/lib/jquery/dist/jquery.js"
+                    asp-fallback-test="window.jQuery">
+            </script>
+            <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.js"
+                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.js"
+                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+            </script>
+        </environment>
+        
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="~/lib/jquery-unobstrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="https://cdn.rawgit.com/needim/noty/77268c46/lib/noty.min.js"></script>
+        <script src="~/js/Sha256.js"></script>
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div id="ModalContainer" class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    function AjaxFill(URL, IDBalise, isAlert, callback) {
+        $.ajax({
+            url: URL,
+            type: "GET",
+            cache: false,
+            success: function (data, status) {
+                $(IDBalise).html(data);
+
+                if (IDBalise == "#ModalContainer") {
+                    $("#myModal").modal({ backdrop: true });
+                }
+                if (typeof (callback) === typeof (Function)) {
+                    callback();
+                }
+            },
+            error: function (data, status, error) {
+                if (isAlert) {
+                    Alert('error', data.responseText)
+                }
+                else {
+                    $.ajax({
+                        url: "/Public/Error",
+                        type: "GET",
+                        cache: false,
+                        data: { ErrorMessage: error },
+                        success: function (data, textStatus) {
+                            $(IDBalise).html(data);
+                        },
+                        error: function (data, status, error) {
+                            $(IDBalise).html("<h1>Oups! :(</h1><h3>Une erreur est survenue...</h3>");
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function Ajax(URL, Success, Error)
+    {
+        $.ajax({
+            url: URL,
+            type: "GET",
+            cache: false,
+            success: Success,
+            error: Error
+        });
+    }
+
+    function UpFileForm(This, success, error) {
+        var Form = $(This);
+        $.ajax({
+            type: "POST",
+            url: Form.attr("action"),
+            data: new FormData(This),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: success,
+            error: error
+        });
+    }
+
+    function CloseModal() {
+        $('#myModal').modal('toggle');
+    }
+
+    function Alert(type, text) {
+        new Noty({
+            type: type, //alert (default), success, error, warning, info
+            layout: 'topRight', //top, topLeft, topCenter, topRight (default), center, centerLeft, centerRight, bottom, bottomLeft, bottomCenter, bottomRight
+            theme: 'relax', //relax, mint (default), metroui
+            text: '<div style="display:flex;"><div style="width:20%; font-size:25px; line-height:25px;" class="glyphicon glyphicon-exclamation-sign"></div><div style="flex-grow:1; line-height:25px; float:left;">' + text + '</div></div>',
+            timeout: 5000,
+            progressBar: true, //Default, progress before fade out is displayed
+        }).show();
+    }
+
+    function TextAreaAdjust(o) {
+        o.style.height = "1px";
+        o.style.height = (25 + o.scrollHeight) + "px";
+    }
+
+    function TextAreasAdjust() {
+        $('textarea').each(function() {
+            $(this).css('height', '1px');
+            $(this).css('height', (35 + this.scrollHeight) + 'px');    
+        })
+    }
+    // Source: https://stackoverflow.com/questions/17461682/calling-a-function-on-bootstrap-modal-open
+    $("#myModal").on('shown.bs.modal', function (e) {
+        if ($(e.target).html().includes('textarea')) {
+            TextAreasAdjust();
+        }
+    });
+
+    function updateTable(nbComp, nbMin, nbMax) {
+        for (var i = 1; i <= 6; i++) {
+            var total = 0;
+            $(".S_" + i).each(function () { total += Number($(this).val()); });
+            $(".Tot_S_" + i).val(total);
+            $(".Tot_S_" + i).css('color', total > 30 ?'rgb(233, 233, 85)':'white');
+        }          
+        for (var i = 1; i <= nbComp; i++) {
+            var total = 0;
+            $(".C_" + i).each(function () { total += Number($(this).val()); });
+            $(".Tot_C_" + i).val(total);
+        }
+        var total = 0;
+        $(".Tot_S").each(function () { total += Number($(this).val()); });
+        $(".Tot_SC").val(total);
+        $("#totalHebdo").text(total);
+        $("#reelTotal").text(total * 15);
+        var nbMaxOk = total*15 < nbMax;
+        var nbMinOk = total*15 > nbMin;
+        $("#HeureMin").css('color', nbMinOk ? 'green' : 'red');
+        $("#HeureMax").css('color', nbMaxOk ? 'green' : 'red');
+        $("#reelTotal").css('color', nbMaxOk && nbMinOk ? '#5cb85c' : 'rgb(255, 113, 113)');
+        
+    
+        
+    }
+</script>
+@RenderSection("Scripts", required: false)

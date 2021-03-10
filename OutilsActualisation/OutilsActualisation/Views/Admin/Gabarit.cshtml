@@ -1,0 +1,68 @@
+﻿@model OutilsActualisation.Models.GabaritsViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    IEnumerable<OutilsActualisation.AppData.Gabarit> listeGabarits;
+    #region Check
+    string Check = "ok";
+    string NotCheck = "remove";
+    string Red = "red";
+    string Green = "green";
+    #endregion Check
+}
+
+@foreach (var Type in Model.typeGabarit)
+{
+    listeGabarits = Model.gabarits.Where(G => G.TypeGabarit == Type.Id);
+
+    <h2 style="margin-left:5%;">Liste des gabarits de type "@Type.Nom"<span style="float:right; margin-right: calc(5% + 3px);" class="btn btn-success" onclick="AjaxFill('/Admin/Gabarit_Create?TypeID=@Type.Id', '#ModalContainer', false);">Créer un nouveau gabarit</span></h2>
+
+    @if (listeGabarits.ToList().Count == 0)
+    {
+        <br />
+        <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun gabarit pour ce type de gabarit...</p>
+        <br />
+    }
+    else
+    {
+        <table class="tableD">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.gabarits.First().Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.gabarits.First().DateCreation)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.gabarits.First().IsDefault)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in listeGabarits)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateCreation)
+                        </td>
+                        <td>
+                            <span style="color:@if (item.IsDefault.Value) { @Green } else { @Red }; font-size:15px;" class="glyphicon glyphicon-@if (item.IsDefault.Value) { @Check } else { @NotCheck }"></span>
+                        </td>
+                        <td style="padding-left:0; padding-right:0; width: 346px;">
+                            <span class="btn btn-primary" onclick="AjaxFill('/Admin/PointGabarit?id=@item.Id', '#ModalContainer', true);"><span style="margin-right:7px;" class="glyphicon glyphicon-eye-open"></span>Voir points</span>
+                            <span class="btn btn-warning" onclick="AjaxFill('/Admin/Gabarit_Update?id=@item.Id', '#ModalContainer', true);"><span style="margin-right:7px;" class="glyphicon glyphicon-pencil"></span>Modifier</span>
+                            <a style=" " class="btn btn-danger" data-ajax-url="/Admin/Gabarit_Delete?id=@item.Id" data-ajax="true" data-ajax-method="POST" data-ajax-success="location.reload();" data-ajax-failure="Alert('error', xhr.responseText)"><span style="margin-right:7px;" class="glyphicon glyphicon-trash"></span>Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+    }
+}
+

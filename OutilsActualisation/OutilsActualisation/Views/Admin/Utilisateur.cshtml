@@ -1,0 +1,85 @@
+﻿@model IEnumerable<OutilsActualisation.AppData.Utilisateur>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    #region Check
+    string Check = "ok";
+    string NotCheck = "remove";
+    string Red = "red";
+    string Green = "green";
+    #endregion Check
+}
+
+<h2 style="margin-left:5%;">Liste des utilisateurs<span style="float:right; margin-right: calc(5% + 3px);" class="btn btn-success" onclick="AjaxFill('/Admin/Utilisateur_Create', '#ModalContainer', false);">Créer un nouvel utilisateur</span></h2>
+
+@if (Model.Count() == 0)
+{
+    <br />
+    <br />
+    <br />
+    <br />
+    <p style="font-weight:bold; font-size:20px; text-align:center;">Aucun utilisateur...</p>
+    <br />
+}
+else
+{
+    <table class="tableD">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Courriel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nom)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Prenom)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Titre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsAdmin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Courriel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prenom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titre)
+                </td>
+                <td>
+                    <span style="color:@if (item.IsAdmin.Value) { @Green } else { @Red }; font-size:15px;" class="glyphicon glyphicon-@if (item.IsAdmin.Value) { @Check } else { @NotCheck }"></span>
+                </td>
+                <td>
+                    <span style="color:@if (item.IsActive.Value) { @Green } else { @Red }; font-size:15px;" class="glyphicon glyphicon-@if (item.IsActive.Value) { @Check } else { @NotCheck }"></span>
+                </td>
+                <td style="padding-left:0; padding-right:0; width: 224px;">
+                    <span style="margin-bottom: 3.5px; width: 211px;" class="btn btn-primary" onclick="AjaxFill('/Admin/Utilisateur_ChangerMDP?id=@item.Courriel', '#ModalContainer', true);"><span style="margin-right:7px;" class="glyphicon glyphicon-lock"></span>Changer mot de passe</span>
+                    <span class="btn btn-warning" onclick="AjaxFill('/Admin/Utilisateur_Update?id=@item.Courriel', '#ModalContainer', true);"><span style="margin-right:7px;" class="glyphicon glyphicon-pencil"></span>Modifier</span>
+                    <a class="btn btn-danger" data-ajax-url="/Admin/Utilisateur_Delete?id=@item.Courriel" data-ajax="true" data-ajax-method="POST" data-ajax-success="location.reload();" data-ajax-failure="Alert('error', xhr.responseText)"><span style="margin-right:7px;" class="glyphicon glyphicon-trash"></span>Supprimer</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+}
+
+
+
